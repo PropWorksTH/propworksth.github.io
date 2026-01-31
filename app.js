@@ -33,23 +33,59 @@ function renderItems(items) {
     return;
   }
 
+  const sections = {
+    listings: [],
+    services: [],
+    testimonials: [],
+    contact: []
+  };
+
+  items.forEach(i => {
+    if (i.title === 'Services') sections.services.push(i);
+    else if (i.title === 'Testimonials') sections.testimonials.push(i);
+    else if (i.title === 'Contact Us') sections.contact.push(i);
+    else sections.listings.push(i);
+  });
+
   el.innerHTML = `
     <section>
       <h2>Listings</h2>
-
-      <ul>
-        ${items
-          .map(
-            i => `
-              <li>
-                <strong>${i.title}</strong><br>
-                <span>${i.subtitle}</span>
-              </li>
-            `
-          )
-          .join('')}
-      </ul>
+      ${renderList(sections.listings)}
     </section>
+
+    <section>
+      <h2>Services</h2>
+      ${renderList(sections.services)}
+    </section>
+
+    <section>
+      <h2>Testimonials</h2>
+      ${renderList(sections.testimonials)}
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      ${renderList(sections.contact)}
+    </section>
+  `;
+}
+
+function renderList(list) {
+  if (!list || list.length === 0) return '<p>-</p>';
+
+  return `
+    <ul>
+      ${list
+        .map(
+          i => `
+            <li>
+              <strong>${i.title}</strong><br>
+              <span>${i.subtitle || ''}</span>
+            </li>
+          `
+        )
+        .join('')}
+    </ul>
   `;
 }
 
