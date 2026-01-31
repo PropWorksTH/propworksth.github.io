@@ -7,9 +7,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
     const data = await res.json();
 
-    el.innerHTML = data.items
-      .map(item => `<div>${item.title} — ${item.subtitle}</div>`)
-      .join('');
+    if (!data.items || data.items.length === 0) {
+      el.textContent = 'No items';
+      return;
+    }
+
+    el.innerHTML = `
+      <h1>Items</h1>
+      <ul>
+        ${data.items
+          .map(
+            i => `<li><strong>${i.title}</strong><br>${i.subtitle}</li>`
+          )
+          .join('')}
+      </ul>
+    `;
   } catch (e) {
     el.textContent = 'ERROR';
   }
