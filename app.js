@@ -28,10 +28,30 @@ async function loadPage() {
 function renderItems(items) {
   const el = document.getElementById('app');
 
-  if (items.length === 0) {
-    el.textContent = 'No items';
+  if (!items || items.length === 0) {
+    el.innerHTML = '<p>No data</p>';
     return;
   }
+
+  el.innerHTML = `
+    <section>
+      <h2>Listings</h2>
+
+      <ul>
+        ${items
+          .map(
+            i => `
+              <li>
+                <strong>${i.title}</strong><br>
+                <span>${i.subtitle}</span>
+              </li>
+            `
+          )
+          .join('')}
+      </ul>
+    </section>
+  `;
+}
 
   el.innerHTML = `
     <h1>PropWorks</h1>
