@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', async () => {
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec';
+
+document.addEventListener('DOMContentLoaded', () => {
   loadPage();
 });
 
@@ -6,20 +9,12 @@ async function loadPage() {
   const el = document.getElementById('app');
   el.textContent = 'Loading…';
 
-  // อ่าน page จาก URL (default = items)
-  const page = new URLSearchParams(location.search).get('page') || 'items';
-
   try {
-    const res = await fetch(
-      `https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=${page}`
-    );
+    const res = await fetch(API_URL);
     const data = await res.json();
 
-    if (page === 'items') {
-      renderItems(data.items || []);
-    } else {
-      el.textContent = 'PAGE NOT FOUND';
-    }
+    // ⭐ จุดสำคัญที่สุด — ที่ก่อนหน้านี้ขาด
+    renderItems(data.items);
   } catch (e) {
     el.textContent = 'ERROR';
   }
@@ -86,22 +81,5 @@ function renderList(list) {
         )
         .join('')}
     </ul>
-  `;
-}
-
-  el.innerHTML = `
-    <h1>PropWorks</h1>
-    <div>
-      ${items
-        .map(
-          i => `
-            <div style="margin-bottom:16px">
-              <strong>${i.title}</strong><br>
-              <span>${i.subtitle}</span>
-            </div>
-          `
-        )
-        .join('')}
-    </div>
   `;
 }
