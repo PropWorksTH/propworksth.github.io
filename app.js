@@ -1,85 +1,61 @@
-const API_URL =
-  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec';
-
-document.addEventListener('DOMContentLoaded', () => {
-  loadPage();
-});
-
-async function loadPage() {
-  const el = document.getElementById('app');
-  el.textContent = 'Loading…';
+document.addEventListener('DOMContentLoaded', async () => {
+  const app = document.getElementById('app');
 
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(
+      'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items'
+    );
     const data = await res.json();
 
-    // ⭐ จุดสำคัญที่สุด — ที่ก่อนหน้านี้ขาด
-    renderItems(data.items);
-  } catch (e) {
-    el.textContent = 'ERROR';
+    renderDynamicSections(data.items);
+  } catch (err) {
+    app.textContent = 'ERROR loading data';
   }
-}
+});
 
-function renderItems(items) {
-  const el = document.getElementById('app');
+/* -------------------- helpers -------------------- */
 
+function renderDynamicSections(items) {
+  const app = document.getElementById('app');
   if (!items || items.length === 0) {
-    el.innerHTML = '<p>No data</p>';
+    app.textContent = 'No data';
     return;
   }
 
-  const sections = {
-    listings: [],
-    services: [],
-    testimonials: [],
-    contact: []
-  };
-
-  items.forEach(i => {
-    if (i.title === 'Services') sections.services.push(i);
-    else if (i.title === 'Testimonials') sections.testimonials.push(i);
-    else if (i.title === 'Contact Us') sections.contact.push(i);
-    else sections.listings.push(i);
+  // group by type (dynamic)
+  const groups = {};
+  items.forEach(item => {
+    const type = item.type || 'Other';
+    if (!groups[type]) groups[type] = [];
+    groups[type].push(item);
   });
 
-  el.innerHTML = `
-    <section>
-      <h2>Listings</h2>
-      ${renderList(sections.listings)}
-    </section>
+  // render
+  let html = '';
+  Object.keys(groups).forEach(type => {
+    html += `
+      <section id="${slug(type)}">
+        <h2>${type}</h2>
+        <ul>
+          ${groups[type]
+            .map(
+              i => `<li>
+                <strong>${i.title || ''}</strong>
+                ${i.subtitle ? `<br><small>${i.subtitle}</small>` : ''}
+              </li>`
+            )
+            .join('')}
+        </ul>
+      </section>
+    `;
+  });
 
-    <section>
-      <h2>Services</h2>
-      ${renderList(sections.services)}
-    </section>
-
-    <section>
-      <h2>Testimonials</h2>
-      ${renderList(sections.testimonials)}
-    </section>
-
-    <section>
-      <h2>Contact</h2>
-      ${renderList(sections.contact)}
-    </section>
-  `;
+  app.innerHTML = html;
 }
 
-function renderList(list) {
-  if (!list || list.length === 0) return '<p>-</p>';
-
-  return `
-    <ul>
-      ${list
-        .map(
-          i => `
-            <li>
-              <strong>${i.title}</strong><br>
-              <span>${i.subtitle || ''}</span>
-            </li>
-          `
-        )
-        .join('')}
-    </ul>
-  `;
+function slug(text) {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]/g, '');
 }
