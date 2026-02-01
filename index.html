@@ -2,25 +2,70 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <title>PropWorks ประเทศไทย | บริการและระบบด้านอสังหาริมทรัพย์</title>
-
+  <title>PropWorks Thailand</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    body{margin:0;font-family:'Kanit',sans-serif;background:#002C66;color:#fff}
-    nav{position:fixed;top:0;left:0;right:0;height:60px;
-        background:rgba(3,69,157,.85);display:flex;align-items:center;z-index:10}
-    .nav-links{margin-left:auto;margin-right:20px;display:flex;gap:20px}
-    .nav-item{cursor:pointer}
-    .page-section{display:none;padding:100px 20px;max-width:1200px;margin:auto}
-    .page-section.active{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-    .card{background:#03459D;border-radius:16px;padding:24px}
-    @media(max-width:900px){
-      .page-section.active{grid-template-columns:1fr}
+    :root{
+      --bg:#002C66;
+      --card:#03459D;
+      --txt:#fff;
+      --border:1px solid rgba(255,255,255,.15);
+      --r:20px;
     }
-    #loader{position:fixed;inset:0;display:flex;align-items:center;
-      justify-content:center;background:#000;z-index:99}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Kanit',sans-serif;
+      background:var(--bg);
+      color:var(--txt);
+      padding-top:70px;
+    }
+    nav{
+      position:fixed;top:0;left:0;right:0;height:60px;
+      background:rgba(3,69,157,.85);
+      display:flex;align-items:center;justify-content:center;
+      backdrop-filter:blur(12px);
+    }
+    .nav{
+      width:100%;max-width:1200px;
+      display:flex;justify-content:space-between;
+      padding:0 20px;
+    }
+    .menu{display:flex;gap:20px}
+    .menu div{cursor:pointer}
+
+    main{
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:32px;
+    }
+    .card{
+      background:var(--card);
+      border:var(--border);
+      border-radius:var(--r);
+      padding:24px;
+      min-height:200px;
+    }
+    @media(max-width:900px){
+      main{grid-template-columns:1fr}
+    }
+
+    #loader{
+      position:fixed;inset:0;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
     body.loaded #loader{display:none}
   </style>
 </head>
@@ -30,53 +75,45 @@
 <div id="loader">Loading…</div>
 
 <nav>
-  <div class="nav-links">
-    <div class="nav-item" onclick="switchPage('home')">Home</div>
-    <div class="nav-item" onclick="switchPage('services')">Services</div>
-    <div class="nav-item" onclick="switchPage('listings')">Listings</div>
-    <div class="nav-item" onclick="switchPage('about')">About</div>
+  <div class="nav">
+    <div>PropWorks</div>
+    <div class="menu">
+      <div>Home</div>
+      <div>Services</div>
+      <div>Listings</div>
+      <div>About</div>
+    </div>
   </div>
 </nav>
 
-<main id="home-page" class="page-section"></main>
-<main id="services-page" class="page-section"></main>
-<main id="listings-page" class="page-section"></main>
-<main id="about-page" class="page-section"></main>
+<main id="app"></main>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec';
+const API =
+'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec';
 
-let allData = [];
-
-// ===== STEP 2 FIX (จบตรงนี้) =====
 fetch(API)
   .then(r => r.json())
-  .then(d => {
-    allData = Array.isArray(d) ? d : (d.items || []);
-    ['home','services','listings','about'].forEach(renderPage);
-    switchPage('home');
-    document.body.classList.add('loaded');
-  });
+  .then(data => {
+    const items = data.items;   // ← จุดสำคัญ
+    const app = document.getElementById('app');
 
-function renderPage(page){
-  const el = document.getElementById(page + '-page');
-  el.innerHTML = '';
-  allData
-    .filter(i => i.page === page)
-    .forEach(i => {
+    items.forEach(i => {
       const c = document.createElement('div');
       c.className = 'card';
-      c.innerHTML = `<h2>${i.title}</h2><p>${i.subtitle || ''}</p>`;
-      el.appendChild(c);
+      c.innerHTML = `
+        <h2>${i.title}</h2>
+        <p>${i.subtitle || ''}</p>
+      `;
+      app.appendChild(c);
     });
-}
 
-function switchPage(p){
-  document.querySelectorAll('.page-section')
-    .forEach(s => s.classList.remove('active'));
-  document.getElementById(p + '-page').classList.add('active');
-  window.scrollTo(0,0);
-}
+    document.body.classList.add('loaded');
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById('loader').innerText = 'API error';
+  });
 </script>
 
 </body>
