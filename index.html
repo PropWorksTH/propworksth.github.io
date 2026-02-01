@@ -22,23 +22,409 @@
   <script src="app.js" defer></script>
 </head>
 
+body {
+      background-color: var(--bg-color);
+      font-family: 'Kanit', sans-serif;
+      font-weight: 300;
+      color: var(--text-main);
+      padding-top: 60px;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* --- 3. CINEMATIC LOADER --- */
+    #loader-overlay {
+      position: fixed; inset: 0; background-color: #000000; z-index: 9999;
+      display: flex; justify-content: center; align-items: center;
+      transition: opacity 0.8s cubic-bezier(0.6, 0.05, 0.2, 1), visibility 0.8s;
+    }
+    body.loaded #loader-overlay { opacity: 0; visibility: hidden; pointer-events: none; }
+    
+    .loader-content { display: flex; flex-direction: column; align-items: center; }
+    .logo-icon { font-size: 64px; color: var(--accent); margin-bottom: 10px; animation: iconFloat 3s ease-in-out infinite; }
+    .logo-text { font-size: 24px; font-weight: 600; letter-spacing: 0.1em; color: white; margin-bottom: 30px; opacity: 0.8; animation: textPulse 2s ease-in-out infinite; }
+    
+    .loading-bar-container { width: 140px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; position: relative; }
+    .loading-bar { position: absolute; top: 0; left: 0; bottom: 0; width: 50%; background: var(--accent); border-radius: 10px; animation: barSlide 1.5s ease-in-out infinite; box-shadow: 0 0 10px var(--accent); }
+
+    /* --- 4. NAVIGATION --- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 60px;
+      background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: var(--border); z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-content { width: 100%; max-width: 1200px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-weight: 600; font-size: 18px; display: flex; align-items: center; gap: 8px; cursor: pointer; z-index: 1002; }
+    .logo img {
+     height: 42px;
+     width: auto;
+     }
+    .logo span {
+    font-size: 20px; 
+    font-weight: 600;
+    white-space: nowrap;
+    }
+
+    .nav-links { display: flex; gap: 24px; }
+    .nav-item { font-size: 18px; font-weight: 400; color: var(--text-sec); cursor: pointer; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { color: var(--text-main); font-weight: 500; }
+    
+    .mobile-menu-btn { display: none; cursor: pointer; z-index: 1002; }
+    .mobile-nav-overlay {
+      position: fixed; inset: 0; background: rgba(0,44,102,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      z-index: 1001; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .mobile-nav-overlay.open { opacity: 1; pointer-events: auto; }
+    .mobile-nav-item { font-size: 24px; font-weight: 500; color: var(--text-sec); cursor: pointer; }
+    .mobile-nav-item.active { color: white; }
+
+    /* --- 5. LAYOUT & GRID --- */
+    .page-section {
+      display: none; opacity: 0; transition: opacity 0.5s ease;
+      max-width: 1200px; margin: 0 auto; padding: 20px;
+    }
+    .page-section.active {
+      display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; gap: 32px;
+      animation: fadeInPage 0.6s forwards; padding-bottom: 100px;
+    }
+
+    /* --- 6. CARDS STYLE --- */
+    .card {
+      background: var(--card-bg); border: var(--border); border-radius: var(--radius); padding: 30px;
+      display: flex; flex-direction: column; justify-content: space-between; color: var(--text-main);
+      text-decoration: none; overflow: hidden; position: relative;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); min-height: 280px;
+    }
+    .card[data-interactive="true"]:hover { transform: scale(1.02); background: #0909FF; cursor: pointer; }
+    
+    .card h1 { font-size: 56px; font-weight: 600; line-height: 1.1; margin-bottom: 16px; }
+    .card h2 { font-size: 24px; font-weight: 500; margin-bottom: 8px; }
+    .card p { font-size: 15px; color: var(--text-sec); font-weight: 300; line-height: 1.6; }
+    
+    .cta-btn { margin-top: 15px; padding: 10px 24px; background: white; color: black; border-radius: 50px; font-weight: 500; font-size: 14px; display: inline-block; }
+    .icon { width: 48px; height: 48px; object-fit: contain; margin-bottom: auto; border-radius: 8px; }
+
+    /* Special Types */
+    .card[data-type="hero-banner"] { min-height: 500px; justify-content: flex-end; border: none; background-size: cover; background-position: center; }
+    .card[data-type="hero-banner"]::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+    .card[data-type="hero-banner"] > div { position: relative; z-index: 2; max-width: 800px; }
+    
+    .card[data-type="section-title"] { background: transparent; border: none; padding: 120px 0 10px 0; min-height: unset; display: block; margin-bottom: -10px; overflow: visible !important; border-radius: 0; }
+    .card[data-type="section-title"] h2 { font-size: 42px; font-weight: 500; }
+    
+    .card[data-type="stat"] { align-items: center; justify-content: center; text-align: center; }
+    .card[data-type="stat"] h2 { font-size: 64px; color: var(--accent); margin: 0; letter-spacing: -2px; }
+    
+    .card[data-type="text-block"] { min-height: auto; justify-content: center; }
+    .card[data-type="text-block"] h3 { font-size: 24px; margin-bottom: 15px; }
+
+    /* --- 8. ANIMATIONS --- */
+    .reveal { opacity: 0; transform: translateY(50px) scale(0.96); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform, opacity; }
+    .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+    .reveal.delay-1 { transition-delay: 0.1s; }
+    .reveal.delay-2 { transition-delay: 0.2s; }
+
+    /* --- 9. RESPONSIVE --- */
+    @media (min-width: 900px) {
+      .span-full { grid-column: 1 / -1; }
+      .span-2x2 { grid-column: span 2; grid-row: span 2; }
+      .span-2x1 { grid-column: span 2; }
+      .span-1x2 { grid-row: span 2; }
+    }
+    @media (max-width: 899px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .page-section.active { grid-template-columns: 1fr; gap: 24px; }
+      .span-full, .span-2x2, .span-2x1, .span-1x2, .span-1x1 { grid-column: 1 / -1; }
+      .card[data-type="hero-banner"] h1 { font-size: 36px; }
+      .card[data-type="section-title"] { padding-top: 80px; }
+    }
+
+    /* Keyframes */
+    @keyframes textPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+    @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes barSlide { 0% { left: -50%; width: 30%; } 50% { width: 60%; } 100% { left: 100%; width: 30%; } }
+    @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+    /* สั่งเฉพาะการ์ดแบบ Service ให้รูปใหญ่เต็มตา */
+    .card[data-type="service"] .icon,
+    .card[data-type="for-sale"] .icon,
+    .card[data-type="for-rent"] .icon {
+        width: 100%;          /* ขยายกว้างเต็มการ์ด */
+        height: 180px;        /* ความสูงของรูป (ปรับเลขนี้ได้ถ้าอยากได้สูงกว่านี้) */
+        object-fit: cover;    /* จัดรูปให้เต็มกรอบโดยไม่เบี้ยว */
+        border-radius: 12px;  /* ทำมุมมนให้รูป */
+        margin-bottom: 20px;  /* ดันข้อความลงไปข้างล่างนิดนึง */
+    }
+
+    /* เฉพาะหน้าจอคอม (Desktop) ที่การ์ดขยายเป็น 2x2 */
+    @media (min-width: 900px) {
+        /* สั่งให้การ์ด Service ที่เป็นขนาด 2x2 ขยายรูปให้สูงขึ้นอีก */
+        .card.span-2x2[data-type="service"] .icon {
+            height: 380px;   /* เพิ่มความสูงจาก 180px เป็น 380px (ปรับเลขนี้ได้) */
+        }
+        
+        /* (แถม) ถ้าเป็นการ์ดแนวนอนยาว (2x1) ก็ปรับให้สูงพอดีๆ */
+        .card.span-2x1[data-type="service"] .icon {
+            height: 220px;
+        }
+    }
+
+    /* (แถม) ปรับการ์ด Contact ให้ไอคอนใหญ่ขึ้นอีกนิดจะได้สมดุล */
+    .card[data-type="contact"] .icon {
+        width: 80px;
+        height: 80px;
+    }
+    .card[data-type="for-sale"]::after {
+  content: "For Sale";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: red;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+}
+.card[data-type="for-rent"]::after {
+  content: "For Rent";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #00FF00;
+  color: #008000;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+}
+  </style>
+</head>
+
 <body>
 
-  <!-- HEADER (static, SEO) -->
-  <header>
-    <h1>PropWorks</h1>
-    <p>บริการและระบบด้านอสังหาริมทรัพย์ครบวงจร</p>
-  </header>
+  <div id="loader-overlay">
+    <div class="loader-content">
+      <span class="material-symbols-rounded logo-icon">all_inclusive</span>
+      <div class="logo-text">Loading...</div>
+      <div class="loading-bar-container"><div class="loading-bar"></div></div>
+    </div>
+  </div>
 
-  <!-- MAIN APP -->
-  <main id="app">
-    Loading…
-  </main>
+  <nav>
+    <div class="nav-content">
+      <div class="logo" onclick="switchPage('home')">
+        <!-- <span class="material-symbols-rounded" style="color:white;">all_inclusive</span>  -->
+        <!-- BACKUP: original content
+        PropWorks
+        -->
+        <img src="https://raw.githubusercontent.com/PropWorksTH/Pics/main/Logo.png" alt="Logo">
+        <span>PropWorks</span>
+      </div>
+      <div class="nav-links">
+        <div class="nav-item active" onclick="switchPage('home')">Home</div>
+        <div class="nav-item" onclick="switchPage('services')">Services</div>
+        <div class="nav-item" onclick="switchPage('listings')">Listings</div>
+        <div class="nav-item" onclick="switchPage('close-a-deal')">Close a Deal</div>
+        <div class="nav-item" onclick="switchPage('about')">About</div>
+        <div class="nav-item" onclick="switchPage('contact')">Contact</div>
+      </div>
+      <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span id="menu-icon" class="material-symbols-rounded" style="font-size: 32px; color: white;">menu</span>
+      </div>
+    </div>
+  </nav>
 
-  <!-- FOOTER -->
-  <footer>
-    <small>© PropWorks Thailand</small>
-  </footer>
+  <!-- SEO Brand Anchor -->
+  <h1 style="position:absolute;left:-9999px;">
+  PropWorks Thailand 
+  </h1>
 
+  <div class="mobile-nav-overlay" id="mobileOverlay">
+    <div class="mobile-nav-item active" onclick="switchPage('home'); toggleMobileMenu()">Home</div>
+    <div class="mobile-nav-item" onclick="switchPage('services'); toggleMobileMenu()">Services</div>
+    <div class="mobile-nav-item" onclick="switchPage('listings'); toggleMobileMenu()">Listings</div>
+    <div class="mobile-nav-item" onclick="switchPage('close-a-deal'); toggleMobileMenu()">Close a Deal</div>
+    <div class="mobile-nav-item" onclick="switchPage('about'); toggleMobileMenu()">About</div>
+    <div class="mobile-nav-item" onclick="switchPage('contact'); toggleMobileMenu()">Contact</div>
+  </div>
+
+  <!-- SEO Brand Block -->
+<section style="display:none">
+  <h1>PropWorks Thailand</h1>
+  <p>
+    PropWorks คือระบบและบริการด้านอสังหาริมทรัพย์ครบวงจรในประเทศไทย
+    สำหรับผู้ซื้อ นักลงทุน ผู้ขาย เจ้าของทรัพย์ และ Agent
+  </p>
+</section>
+
+  <main id="home-page" class="page-section"></main>
+  <main id="services-page" class="page-section"></main>
+  <main id="listings-page" class="page-section"></main>
+  <main id="close-a-deal-page" class="page-section"></main>
+  <main id="about-page" class="page-section"></main>
+  <main id="contact-page" class="page-section"></main>
+
+  <script>
+    let allData = [];
+
+    // Observer: ตรวจจับการเลื่อนจอเพื่อเล่น Animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    window.onload = function() {
+      google.script.run.withSuccessHandler(initApp).getData();
+    };
+
+    function initApp(data) {
+      allData = data;
+      renderPage('home');
+      renderPage('services');
+      renderPage('listings');
+      renderPage('close-a-deal');
+      renderPage('about');
+      renderPage('contact');
+      switchPage('home');
+
+      // ปิดหน้า Loading
+      setTimeout(() => { document.body.classList.add('loaded'); }, 1000);
+    }
+
+    function renderPage(pageName) {
+      const container = document.getElementById(`${pageName}-page`);
+      const pageData = allData.filter(item => item.page === pageName);
+
+      if (pageData.length === 0) {
+        container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#444;">No content yet.</div>`;
+        return;
+      }
+
+      pageData.forEach((item, index) => {
+        const isInteractive = item.linkUrl ? true : false;
+        const tag = item.linkUrl ? 'a' : 'div';
+        const card = document.createElement(tag);
+
+        // --- Layout Logic ---
+        const safeSize = String(item.size || '').toLowerCase().trim();
+        const safeType = String(item.type || '').toLowerCase().trim();
+        let spanClass = 'span-1x1';
+
+        if (['hero-banner', 'section-title', 'text-block'].includes(safeType)) {
+          spanClass = 'span-full';
+        } else {
+          if (safeSize === 'full') spanClass = 'span-full';
+          else if (safeSize === '2x2') spanClass = 'span-2x2';
+          else if (safeSize === '2x1') spanClass = 'span-2x1';
+          else if (safeSize === '1x2') spanClass = 'span-1x2';
+        }
+
+        card.className = `card ${spanClass} reveal delay-${index % 3}`;
+        card.dataset.type = String(item.type).toLowerCase().replace(/\s+/g, '-');
+
+        if (isInteractive && !['hero-banner', 'section-title', 'text-block'].includes(item.type)) {
+          card.dataset.interactive = "true";
+          if (item.linkUrl) {
+            card.href = item.linkUrl;
+            if (!item.linkUrl.startsWith('mailto:') && !item.linkUrl.startsWith('tel:')) card.target = "_blank";
+          }
+        }
+
+        // --- 🧹 CLEANED: รับลิงก์รูปตรงๆ (Direct Link) ---
+        const finalImgUrl = item.iconUrl; 
+
+        // --- HTML BUILDER ---
+        let inner = '';
+        // ใส่ onerror เพื่อซ่อนรูปที่ลิงก์เสีย
+        const img = finalImgUrl ? `<img src="${finalImgUrl}" class="icon" onerror="this.style.display='none'">` : '';
+        const fallback = `<span class="material-symbols-rounded">grid_view</span>`;
+
+        if (item.type === 'hero-banner') {
+          if (finalImgUrl) card.style.backgroundImage = `url('${finalImgUrl}')`;
+          inner = `<div><h1>${item.title}</h1><p>${item.subtitle}</p></div>`;
+        } 
+        else if (item.type === 'hero') {
+          if (finalImgUrl) {
+            card.style.backgroundImage = `url('${finalImgUrl}')`;
+            card.style.backgroundSize = 'cover'; card.style.backgroundPosition = 'center';
+          }
+          card.style.justifyContent = 'flex-end';
+          const overlay = document.createElement('div');
+          overlay.style.position = 'absolute'; overlay.style.inset = '0';
+          overlay.style.background = 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)'; overlay.style.zIndex = '1';
+          card.appendChild(overlay);
+          inner = `<div style="position:relative; z-index:2;"><h2 style="font-size:28px; margin-bottom:4px;">${item.title}</h2><p style="color:rgba(255,255,255,0.9);">${item.subtitle}</p><span class="cta-btn" style="margin-top:10px; font-size:12px; padding:8px 16px;">Contact</span></div>`;
+        }
+        else if (item.type === 'section-title') {
+          inner = `<div><h2>${item.title}</h2><p>${item.subtitle}</p></div>`;
+        }
+        else if (item.type === 'text-block') {
+          inner = `<div><h3>${item.title}</h3><p>${item.subtitle}</p></div>`;
+        }
+        else if (item.type === 'stat') {
+  const v = Number(item.title);
+  const display = v < 1 ? Math.round(v * 100) + '%' : item.title;
+  inner = `<div><h2>${display}</h2><p>${item.subtitle}</p></div>`;
+}
+        else if (item.type === 'contact') {
+          inner = `<span class="material-symbols-rounded" style="font-size:48px; margin-bottom:15px">smartphone</span><div><h2>${item.title}</h2><p>${item.subtitle}</p></div>`;
+        }
+        else {
+          // Standard Card
+          inner = `${finalImgUrl ? img : fallback}<div><h2>${item.title}</h2><p>${item.subtitle}</p></div>`;
+        }
+
+        if (item.type !== 'hero') card.innerHTML = inner;
+        else {
+          const contentDiv = document.createElement('div'); contentDiv.innerHTML = inner; contentDiv.style.width = '100%'; card.appendChild(contentDiv);
+        }
+
+        container.appendChild(card);
+        observer.observe(card);
+      });
+    }
+
+    function switchPage(pageName) {
+      document.querySelectorAll('.page-section').forEach(el => { el.classList.remove('active'); el.style.display = 'none'; });
+      const target = document.getElementById(`${pageName}-page`);
+      if (target) {
+        target.style.display = 'grid';
+        setTimeout(() => { target.classList.add('active'); }, 10);
+        window.scrollTo(0, 0);
+      }
+      
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+      
+      const indexMap = { 'home': 0, 'services': 1, 'listings': 2,'close-a-deal': 3, 'about': 4, 'contact': 5 };
+      const idx = indexMap[pageName];
+      if (idx !== undefined) {
+        document.querySelectorAll('.nav-item')[idx]?.classList.add('active');
+        document.querySelectorAll('.mobile-nav-item')[idx]?.classList.add('active');
+      }
+    }
+
+    function toggleMobileMenu() {
+      const overlay = document.getElementById('mobileOverlay');
+      const icon = document.getElementById('menu-icon');
+      if (overlay.classList.contains('open')) {
+        overlay.classList.remove('open');
+        icon.innerText = 'menu';
+      } else {
+        overlay.classList.add('open');
+        icon.innerText = 'close';
+      }
+    }
+  </script>
 </body>
+  
 </html>
