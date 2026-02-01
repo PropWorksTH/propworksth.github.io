@@ -90,30 +90,44 @@
 
 <script>
 const API =
-'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec';
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+
+let allItems = [];
 
 fetch(API)
   .then(r => r.json())
   .then(data => {
-    const items = data.items;   // ← จุดสำคัญ
-    const app = document.getElementById('app');
+    allItems = data.items || [];
+    renderPage('home');
+    document.body.classList.add('loaded');
+  });
 
-    items.forEach(i => {
-      const c = document.createElement('div');
-      c.className = 'card';
-      c.innerHTML = `
-        <h2>${i.title}</h2>
+function renderPage(page) {
+  // ล้างทุกหน้า
+  document.querySelectorAll('.page-section').forEach(s => s.innerHTML = '');
+
+  // render เฉพาะ page นั้น
+  allItems
+    .filter(i => i.page === page)
+    .forEach(i => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${i.title}</h3>
         <p>${i.subtitle || ''}</p>
       `;
-      app.appendChild(c);
+      document.getElementById(page + '-page').appendChild(card);
     });
 
-    document.body.classList.add('loaded');
-  })
-  .catch(err => {
-    console.error(err);
-    document.getElementById('loader').innerText = 'API error';
-  });
+  switchPage(page);
+}
+
+function switchPage(p) {
+  document.querySelectorAll('.page-section')
+    .forEach(s => s.classList.remove('active'));
+  document.getElementById(p + '-page').classList.add('active');
+  window.scrollTo(0,0);
+}
 </script>
 
 </body>
