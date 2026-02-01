@@ -2,76 +2,105 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-
   <title>PropWorks ประเทศไทย | บริการและระบบด้านอสังหาริมทรัพย์</title>
-  <meta name="description" content="PropWorks ประเทศไทย ให้บริการและระบบด้านอสังหาริมทรัพย์สำหรับผู้ซื้อ ผู้ขาย เจ้าของทรัพย์ Agent และนักลงทุนในประเทศไทย">
-  <link rel="canonical" href="https://propworksth.github.io/">
 
-  <!-- GEO + SEO -->
+  <meta name="description" content="PropWorks ประเทศไทย ให้บริการและระบบด้านอสังหาริมทรัพย์ครบวงจร">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="content-language" content="th">
   <meta name="geo.region" content="TH">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="PropWorks ประเทศไทย">
-  <meta property="og:description" content="แพลตฟอร์มและบริการด้านอสังหาริมทรัพย์ในประเทศไทย">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://propworksth.github.io/og-image.png">
-
-  <!-- Fonts & Icons -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
 
-  <!-- ================= STYLE (จาก Script 100%) ================= -->
+  <!-- ================= STYLE (จาก Apps Script 100%) ================= -->
   <style>
     :root {
-      --bg-color:#002C66;--card-bg:#03459D;--text-main:#fff;--text-sec:#F5F5F7;
-      --accent:#2997FF;--nav-bg:rgba(3,69,157,.85);
-      --border:1px solid rgba(255,255,255,.12);--radius:20px
+      --bg-color:#002C66;
+      --card-bg:#03459D;
+      --text-main:#fff;
+      --text-sec:#F5F5F7;
+      --accent:#2997FF;
+      --nav-bg:rgba(3,69,157,.85);
+      --border:1px solid rgba(255,255,255,.12);
+      --radius:20px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      background:var(--bg-color);font-family:'Kanit',sans-serif;
-      color:var(--text-main);padding:60px 0 80px;overflow-x:hidden
+      background:var(--bg-color);
+      font-family:'Kanit',sans-serif;
+      font-weight:300;
+      color:var(--text-main);
+      padding-top:60px;
+      padding-bottom:80px;
+      overflow-x:hidden;
     }
 
-    #loader-overlay{position:fixed;inset:0;background:#000;z-index:9999;
-      display:flex;align-items:center;justify-content:center}
+    #loader-overlay{
+      position:fixed;inset:0;background:#000;z-index:9999;
+      display:flex;align-items:center;justify-content:center;
+      transition:.6s;
+    }
     body.loaded #loader-overlay{opacity:0;visibility:hidden}
 
-    nav{position:fixed;top:0;left:0;right:0;height:60px;
-      background:var(--nav-bg);backdrop-filter:blur(20px);z-index:1000;
-      display:flex;align-items:center;justify-content:center}
-
-    .nav-content{max-width:1200px;width:100%;padding:0 20px;
-      display:flex;justify-content:space-between;align-items:center}
+    nav{
+      position:fixed;top:0;left:0;right:0;height:60px;
+      background:var(--nav-bg);
+      backdrop-filter:blur(20px);
+      z-index:1000;
+      display:flex;align-items:center;justify-content:center;
+      border-bottom:var(--border);
+    }
+    .nav-content{
+      max-width:1200px;width:100%;
+      padding:0 20px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
     .logo{display:flex;align-items:center;gap:8px;cursor:pointer}
     .logo img{height:42px}
-
     .nav-links{display:flex;gap:24px}
-    .nav-item{cursor:pointer}
+    .nav-item{cursor:pointer;color:var(--text-sec)}
+    .nav-item.active{color:#fff;font-weight:500}
 
-    .page-section{display:none;max-width:1200px;margin:auto;padding:20px}
+    .page-section{
+      display:none;
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+      opacity:0;
+      transition:.4s;
+    }
     .page-section.active{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:32px
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:32px;
+      opacity:1;
     }
 
     .card{
-      background:var(--card-bg);border:var(--border);border-radius:var(--radius);
-      padding:30px;min-height:280px
+      background:var(--card-bg);
+      border:var(--border);
+      border-radius:var(--radius);
+      padding:30px;
+      min-height:280px;
+      transition:.3s;
     }
+
     @media(max-width:900px){
       .page-section.active{grid-template-columns:1fr}
+      .nav-links{display:none}
     }
   </style>
 </head>
 
 <body>
 
+<!-- Loader -->
 <div id="loader-overlay">Loading…</div>
 
+<!-- Nav -->
 <nav>
   <div class="nav-content">
     <div class="logo" onclick="switchPage('home')">
@@ -79,10 +108,12 @@
       <span>PropWorks</span>
     </div>
     <div class="nav-links">
-      <div class="nav-item" onclick="switchPage('home')">Home</div>
+      <div class="nav-item active" onclick="switchPage('home')">Home</div>
       <div class="nav-item" onclick="switchPage('services')">Services</div>
       <div class="nav-item" onclick="switchPage('listings')">Listings</div>
+      <div class="nav-item" onclick="switchPage('close-a-deal')">Close a Deal</div>
       <div class="nav-item" onclick="switchPage('about')">About</div>
+      <div class="nav-item" onclick="switchPage('contact')">Contact</div>
     </div>
   </div>
 </nav>
@@ -90,36 +121,72 @@
 <!-- SEO anchor -->
 <h1 style="position:absolute;left:-9999px">PropWorks Thailand</h1>
 
+<!-- Pages -->
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
+<main id="close-a-deal-page" class="page-section"></main>
 <main id="about-page" class="page-section"></main>
+<main id="contact-page" class="page-section"></main>
 
-<!-- ================= JS (GitHub version) ================= -->
+<!-- ================= JS (Apps Script logic + fetch) ================= -->
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec';
-let allData=[];
+const API_URL = 'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec'; // ← แก้แค่จุดนี้
+let allData = [];
 
-fetch(API).then(r=>r.json()).then(d=>{
-  allData=d.items||[];
-  render('home');render('services');render('listings');render('about');
-  switchPage('home');
-  document.body.classList.add('loaded');
-});
+// โหลดข้อมูล (แทน google.script.run)
+fetch(API_URL)
+  .then(r => r.json())
+  .then(data => {
+    allData = data;
+    ['home','services','listings','close-a-deal','about','contact']
+      .forEach(renderPage);
+    switchPage('home');
+    document.body.classList.add('loaded');
+  })
+  .catch(err => console.error(err));
 
-function render(page){
-  const el=document.getElementById(page+'-page');
-  allData.filter(i=>i.page===page).forEach(i=>{
-    const c=document.createElement('div');
-    c.className='card';
-    c.innerHTML=`<h2>${i.title}</h2><p>${i.subtitle||''}</p>`;
-    el.appendChild(c);
+function renderPage(pageName){
+  const container = document.getElementById(`${pageName}-page`);
+  container.innerHTML = '';
+  const pageData = allData.filter(i => i.page === pageName);
+
+  if(pageData.length === 0){
+    container.innerHTML =
+      `<div style="grid-column:1/-1;text-align:center;opacity:.4">
+        No content
+      </div>`;
+    return;
+  }
+
+  pageData.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h2>${item.title}</h2>
+      <p>${item.subtitle || ''}</p>
+    `;
+    container.appendChild(card);
   });
 }
 
-function switchPage(p){
-  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(p+'-page').classList.add('active');
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item')
+    .forEach(n => n.classList.remove('active'));
+
+  document.getElementById(`${page}-page`).classList.add('active');
+
+  const map = {
+    home:0, services:1, listings:2,
+    'close-a-deal':3, about:4, contact:5
+  };
+  const idx = map[page];
+  if(idx !== undefined){
+    document.querySelectorAll('.nav-item')[idx]
+      ?.classList.add('active');
+  }
   window.scrollTo(0,0);
 }
 </script>
