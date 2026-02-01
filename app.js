@@ -7,55 +7,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
     const data = await res.json();
 
-    renderDynamicSections(data.items);
-  } catch (err) {
-    app.textContent = 'ERROR loading data';
+    renderUI(data.items);
+  } catch (e) {
+    app.textContent = 'ERROR';
   }
 });
 
-/* -------------------- helpers -------------------- */
+/* ---------------- UI restore ---------------- */
 
-function renderDynamicSections(items) {
+function renderUI(items) {
   const app = document.getElementById('app');
+
   if (!items || items.length === 0) {
-    app.textContent = 'No data';
+    app.textContent = 'No content';
     return;
   }
 
-  // group by type (dynamic)
+  // group by type (เหมือน STEP 8.2 แต่ render แบบเดิม)
   const groups = {};
-  items.forEach(item => {
-    const type = item.type || 'Other';
+  items.forEach(i => {
+    const type = i.type || 'Other';
     if (!groups[type]) groups[type] = [];
-    groups[type].push(item);
+    groups[type].push(i);
   });
 
-  // render
   let html = '';
+
   Object.keys(groups).forEach(type => {
     html += `
-      <section id="${slug(type)}">
-        <h2>${type}</h2>
-        <ul>
-          ${groups[type]
-            .map(
-              i => `<li>
-                <strong>${i.title || ''}</strong>
-                ${i.subtitle ? `<br><small>${i.subtitle}</small>` : ''}
-              </li>`
-            )
-            .join('')}
-        </ul>
+      <section class="section">
+        <h2 class="section-title">${type}</h2>
+
+        ${groups[type]
+          .map(
+            i => `
+            <div class="item">
+              <h3 class="item-title">${i.title || ''}</h3>
+              ${i.subtitle ? `<p class="item-subtitle">${i.subtitle}</p>` : ''}
+            </div>
+          `
+          )
+          .join('')}
       </section>
     `;
   });
 
   app.innerHTML = html;
-}
-
-function slug(text) {
-  return text
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w\-]/g, '');
 }
