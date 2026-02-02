@@ -58,7 +58,6 @@
       min-height:200px;
     }
 
-    /* section title (Original style) */
     .section-title{
       grid-column:1 / -1;
       margin:40px 0 10px;
@@ -68,7 +67,6 @@
       font-weight:500;
     }
 
-    /* ===== SIZE ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -110,7 +108,6 @@
   </div>
 </nav>
 
-<!-- PAGES -->
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
@@ -122,15 +119,22 @@
 const API =
   'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
-fetch(API)
-  .then(r => r.json())
-  .then(data => {
+/* ✅ ปลด loader ทันที */
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('loaded');
+  fetchItems();
+});
+
+async function fetchItems(){
+  try{
+    const r = await fetch(API);
+    const data = await r.json();
     renderItems(data.items || []);
     switchPage('home');
-  })
-  .finally(() => {
-    document.body.classList.add('loaded');
-  });
+  }catch(err){
+    console.error('API ERROR', err);
+  }
+}
 
 function sizeToClass(size){
   const s = String(size || '').toLowerCase().trim();
@@ -150,38 +154,26 @@ function renderItems(items){
     const type = String(i.type || 'card').toLowerCase().trim();
     let el;
 
-    /* HERO */
     if (type === 'hero' || type === 'hero-banner') {
       el = document.createElement('div');
       el.className = 'card span-full';
       el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
     }
-
-    /* SECTION TITLE */
     else if (type === 'section-title') {
       el = document.createElement('div');
       el.className = 'section-title';
       el.innerHTML = `<h2>${i.title}</h2>`;
     }
-
-    /* TEXT BLOCK */
     else if (type === 'text-block') {
       el = document.createElement('div');
       el.className = 'span-full';
       el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
     }
-
-    /* REVIEW / TESTIMONIALS (FIX) */
-    else if (type === 'review' || type === 'testimonial') {
+    else if (type === 'review') {
       el = document.createElement('div');
       el.className = `card ${sizeToClass(i.size)}`;
-      el.innerHTML = `
-        <p>"${i.subtitle || ''}"</p>
-        <strong>${i.title}</strong>
-      `;
+      el.innerHTML = `<p>"${i.subtitle || ''}"</p><strong>${i.title}</strong>`;
     }
-
-    /* DEFAULT CARD */
     else {
       el = document.createElement('div');
       el.className = `card ${sizeToClass(i.size)}`;
