@@ -16,6 +16,7 @@
       --txt:#fff;
       --border:1px solid rgba(255,255,255,.15);
       --r:20px;
+      --muted:rgba(255,255,255,.75);
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -50,23 +51,52 @@
     }
     main.page-section.active{display:grid}
 
+    /* ===== BASE CARD ===== */
     .card{
       background:var(--card);
       border:var(--border);
       border-radius:var(--r);
       padding:24px;
-      min-height:200px;
+      min-height:160px;
     }
+    .card h3{font-size:20px;font-weight:500;margin-bottom:8px}
+    .card p{color:var(--muted);line-height:1.6}
 
+    /* ===== TYPE: SECTION TITLE (NON-CARD) ===== */
     .section-title{
-      grid-column:1 / -1;
-      margin:40px 0 10px;
+      padding:8px 4px 0;
     }
     .section-title h2{
       font-size:28px;
+      font-weight:600;
+    }
+
+    /* ===== TYPE: TEXT BLOCK (FULL CARD) ===== */
+    .text-block{
+      font-size:16px;
+      line-height:1.8;
+    }
+
+    /* ===== TYPE: HERO / HERO-BANNER ===== */
+    .hero h1{
+      font-size:36px;
+      font-weight:600;
+      margin-bottom:12px;
+    }
+    .hero p{font-size:18px;color:var(--muted)}
+
+    /* ===== TYPE: REVIEW ===== */
+    .review .subtitle{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    .review .title{
+      font-size:18px;
       font-weight:500;
     }
 
+    /* ===== SIZE (DESKTOP) ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -108,6 +138,7 @@
   </div>
 </nav>
 
+<!-- PAGES -->
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
@@ -119,22 +150,15 @@
 const API =
   'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
-/* ✅ ปลด loader ทันที */
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('loaded');
-  fetchItems();
-});
-
-async function fetchItems(){
-  try{
-    const r = await fetch(API);
-    const data = await r.json();
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
     renderItems(data.items || []);
     switchPage('home');
-  }catch(err){
-    console.error('API ERROR', err);
-  }
-}
+  })
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
 
 function sizeToClass(size){
   const s = String(size || '').toLowerCase().trim();
@@ -154,30 +178,58 @@ function renderItems(items){
     const type = String(i.type || 'card').toLowerCase().trim();
     let el;
 
+    // ===== HERO / HERO-BANNER =====
     if (type === 'hero' || type === 'hero-banner') {
       el = document.createElement('div');
-      el.className = 'card span-full';
-      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
+      el.className = 'card span-full hero';
+      el.innerHTML = `
+        <h1>${i.title || ''}</h1>
+        <p>${i.subtitle || ''}</p>
+      `;
     }
+
+    // ===== SECTION TITLE (NON-CARD) =====
     else if (type === 'section-title') {
       el = document.createElement('div');
-      el.className = 'section-title';
-      el.innerHTML = `<h2>${i.title}</h2>`;
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title || ''}</h2>`;
     }
+
+    // ===== TEXT BLOCK (CARD) =====
     else if (type === 'text-block') {
       el = document.createElement('div');
-      el.className = 'span-full';
+      el.className = 'card span-full text-block';
       el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
     }
+
+    // ===== REVIEW (CARD | SUBTITLE TOP, TITLE BOTTOM) =====
     else if (type === 'review') {
       el = document.createElement('div');
-      el.className = `card ${sizeToClass(i.size)}`;
-      el.innerHTML = `<p>"${i.subtitle || ''}"</p><strong>${i.title}</strong>`;
+      el.className = `card review ${sizeToClass(i.size)}`;
+      el.innerHTML = `
+        <div class="subtitle">${i.subtitle || ''}</div>
+        <div class="title">${i.title || ''}</div>
+      `;
     }
+
+    // ===== CONTACT =====
+    else if (type === 'contact') {
+      el = document.createElement('div');
+      el.className = 'card span-full';
+      el.innerHTML = `
+        <h3>${i.title || ''}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    // ===== DEFAULT / CARD-BASED =====
     else {
       el = document.createElement('div');
       el.className = `card ${sizeToClass(i.size)}`;
-      el.innerHTML = `<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+      el.innerHTML = `
+        <h3>${i.title || ''}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
     }
 
     container.appendChild(el);
