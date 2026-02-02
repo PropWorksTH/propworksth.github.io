@@ -1,26 +1,117 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>PropWorks Thailand</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="content-language" content="th">
+  <meta name="geo.region" content="TH">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
 
   <style>
-    :root{
-      --bg:#002C66;
-      --card:#03459D;
-      --txt:#fff;
-      --border:1px solid rgba(255,255,255,.15);
-      --r:20px;
+    :root {
+      --bg-color:#002C66;
+      --card-bg:#03459D;
+      --text-main:#FFFFFF;
+      --text-sec:#F5F5F7;
+      --accent:#2997FF;
+      --nav-bg:rgba(3,69,157,.85);
+      --border:1px solid rgba(255,255,255,.12);
+      --radius:20px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-
     body{
+      background:var(--bg-color);
       font-family:'Kanit',sans-serif;
-      background:var(--bg);
-      color:var(--txt);
-      padding-top:6
+      color:var(--text-main);
+      padding-top:60px;
+      padding-bottom:80px;
+    }
+    nav{
+      position:fixed;top:0;left:0;right:0;height:60px;
+      background:var(--nav-bg);
+      display:flex;align-items:center;justify-content:center;
+      z-index:1000;
+    }
+    .nav-content{
+      width:100%;max-width:1200px;
+      padding:0 20px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .logo{font-weight:600;font-size:18px;display:flex;gap:8px;align-items:center}
+    .logo img{height:42px}
+    .nav-links{display:flex;gap:24px}
+    .nav-item{cursor:pointer;color:var(--text-sec)}
+    .nav-item.active{color:#fff;font-weight:500}
+
+    .page-section{
+      display:none;
+      max-width:1200px;
+      margin:0 auto;
+      padding:20px;
+    }
+    .page-section.active{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:32px;
+    }
+
+    .card{
+      background:var(--card-bg);
+      border:var(--border);
+      border-radius:var(--radius);
+      padding:30px;
+      min-height:200px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      font-weight:500;
+    }
+    .span-full{grid-column:1/-1}
+
+    @media(max-width:899px){
+      .page-section.active{grid-template-columns:1fr}
+      .span-full{grid-column:1/-1}
+    }
+
+    /* loader ปิดถาวร (Step 1) */
+    #loader-overlay{display:none}
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <div class="nav-content">
+    <div class="logo">
+      <img src="https://raw.githubusercontent.com/PropWorksTH/Pics/main/Logo.png">
+      <span>PropWorks</span>
+    </div>
+    <div class="nav-links">
+      <div class="nav-item active">Home</div>
+      <div class="nav-item">Services</div>
+      <div class="nav-item">Listings</div>
+      <div class="nav-item">Close a Deal</div>
+      <div class="nav-item">About</div>
+      <div class="nav-item">Contact</div>
+    </div>
+  </div>
+</nav>
+
+<!-- STEP 1 TEST SHELL -->
+<main id="home-page" class="page-section active">
+  <div class="card span-full">HOME SHELL OK</div>
+</main>
+
+<main id="services-page" class="page-section"></main>
+<main id="listings-page" class="page-section"></main>
+<main id="close-a-deal-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
+<main id="contact-page" class="page-section"></main>
+
+</body>
+</html>
