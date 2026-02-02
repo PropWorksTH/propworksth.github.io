@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <title>PropWorks Thailand</title>
+  <title>PropWorks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,24 +60,11 @@
       flex-direction:column;
     }
 
-    /* baseline icon */
     .icon{
       width:48px;
       height:48px;
       object-fit:contain;
       margin-bottom:16px;
-      display:block;
-    }
-
-    /* STEP 1: fix icon (CSS only, ไม่แตะ JS / structure) */
-    .card[data-type="service"] .icon,
-    .card[data-type="for-sale"] .icon,
-    .card[data-type="for-rent"] .icon{
-      width:100%;
-      height:180px;
-      object-fit:cover;
-      border-radius:12px;
-      margin-bottom:20px;
     }
 
     .section-title h2{
@@ -170,9 +157,39 @@ function renderItems(items){
 
     if (type === 'hero' || type === 'hero-banner') {
       el.className = 'card span-full';
-      el.dataset.type = type;
       el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
     }
     else if (type === 'section-title') {
       el.className = 'span-full section-title';
-      el.innerHTML = `<h2
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+    else if (type === 'text-block') {
+      el.className = 'card span-full';
+      el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
+    }
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.innerHTML = `
+        ${iconHTML}
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    container.appendChild(el);
+  });
+}
+
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+}
+</script>
+
+</body>
+</html>
