@@ -1,117 +1,182 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-  <base target="_top">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="content-language" content="th">
-  <meta name="geo.region" content="TH">
+  <meta charset="utf-8">
+  <title>PropWorks Thailand</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg-color:#002C66;
-      --card-bg:#03459D;
-      --text-main:#FFFFFF;
-      --text-sec:#F5F5F7;
-      --accent:#2997FF;
-      --nav-bg:rgba(3,69,157,.85);
-      --border:1px solid rgba(255,255,255,.12);
-      --radius:20px;
+    :root{
+      --bg:#002C66;
+      --card:#03459D;
+      --txt:#fff;
+      --border:1px solid rgba(255,255,255,.15);
+      --r:20px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      background:var(--bg-color);
       font-family:'Kanit',sans-serif;
-      color:var(--text-main);
-      padding-top:60px;
-      padding-bottom:80px;
+      background:var(--bg);
+      color:var(--txt);
+      padding-top:70px;
     }
+
     nav{
       position:fixed;top:0;left:0;right:0;height:60px;
-      background:var(--nav-bg);
+      background:rgba(3,69,157,.85);
       display:flex;align-items:center;justify-content:center;
+      backdrop-filter:blur(12px);
       z-index:1000;
     }
-    .nav-content{
+    .nav{
       width:100%;max-width:1200px;
+      display:flex;justify-content:space-between;
       padding:0 20px;
-      display:flex;justify-content:space-between;align-items:center;
     }
-    .logo{font-weight:600;font-size:18px;display:flex;gap:8px;align-items:center}
-    .logo img{height:42px}
-    .nav-links{display:flex;gap:24px}
-    .nav-item{cursor:pointer;color:var(--text-sec)}
-    .nav-item.active{color:#fff;font-weight:500}
+    .menu{display:flex;gap:20px}
+    .menu div{cursor:pointer}
 
-    .page-section{
-      display:none;
+    main.page-section{
       max-width:1200px;
-      margin:0 auto;
+      margin:auto;
       padding:20px;
-    }
-    .page-section.active{
-      display:grid;
+      display:none;
       grid-template-columns:repeat(4,1fr);
       gap:32px;
     }
+    main.page-section.active{display:grid}
 
     .card{
-      background:var(--card-bg);
+      background:var(--card);
       border:var(--border);
-      border-radius:var(--radius);
-      padding:30px;
+      border-radius:var(--r);
+      padding:24px;
       min-height:200px;
+    }
+
+    .icon{
+      width:48px;height:48px;
+      object-fit:contain;
+      margin-bottom:16px;
+    }
+
+    @media (min-width:900px){
+      .span-full{grid-column:1 / -1}
+      .span-2x2{grid-column:span 2; grid-row:span 2}
+      .span-2x1{grid-column:span 2}
+      .span-1x2{grid-row:span 2}
+    }
+    @media(max-width:900px){
+      main.page-section{grid-template-columns:1fr}
+      .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
+    }
+
+    #loader{
+      position:fixed;inset:0;
+      background:#000;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:24px;
-      font-weight:500;
+      z-index:9999;
     }
-    .span-full{grid-column:1/-1}
-
-    @media(max-width:899px){
-      .page-section.active{grid-template-columns:1fr}
-      .span-full{grid-column:1/-1}
-    }
-
-    /* loader ปิดถาวร (Step 1) */
-    #loader-overlay{display:none}
+    body.loaded #loader{display:none}
   </style>
 </head>
 
 <body>
 
+<div id="loader">Loading…</div>
+
 <nav>
-  <div class="nav-content">
-    <div class="logo">
-      <img src="https://raw.githubusercontent.com/PropWorksTH/Pics/main/Logo.png">
-      <span>PropWorks</span>
-    </div>
-    <div class="nav-links">
-      <div class="nav-item active">Home</div>
-      <div class="nav-item">Services</div>
-      <div class="nav-item">Listings</div>
-      <div class="nav-item">Close a Deal</div>
-      <div class="nav-item">About</div>
-      <div class="nav-item">Contact</div>
+  <div class="nav">
+    <div>PropWorks</div>
+    <div class="menu">
+      <div onclick="switchPage('home')">Home</div>
+      <div onclick="switchPage('services')">Services</div>
+      <div onclick="switchPage('listings')">Listings</div>
+      <div onclick="switchPage('close-a-deal')">Close a Deal</div>
+      <div onclick="switchPage('about')">About</div>
+      <div onclick="switchPage('contact')">Contact</div>
     </div>
   </div>
 </nav>
 
-<!-- STEP 1 TEST SHELL -->
-<main id="home-page" class="page-section active">
-  <div class="card span-full">HOME SHELL OK</div>
-</main>
-
+<!-- PAGES (App Shell) -->
+<main id="home-page" class="page-section active"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
 <main id="close-a-deal-page" class="page-section"></main>
 <main id="about-page" class="page-section"></main>
 <main id="contact-page" class="page-section"></main>
+
+<script>
+const API =
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
+    renderItems(data.items || []);
+    // ไม่บังคับ switch ซ้ำ — home ถูก active ตั้งแต่ต้นแล้ว
+  })
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
+
+function sizeToClass(size){
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
+}
+
+function renderItems(items){
+  items.forEach(i => {
+    const page = String(i.page || 'home').toLowerCase().trim();
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
+
+    const type = String(i.type || 'card').toLowerCase().trim();
+    let el = document.createElement('div');
+
+    const icon = i.iconUrl || i.iconURL || i.IconURL || '';
+    const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
+
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
+    }
+    else if (type === 'section-title') {
+      el.className = 'span-full';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
+      el.innerHTML = `${iconHTML}<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    }
+
+    container.appendChild(el);
+  });
+}
+
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+}
+</script>
 
 </body>
 </html>
