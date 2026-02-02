@@ -58,12 +58,10 @@
       min-height:200px;
     }
 
-    /* ===== ICON (ORIGINAL 1:1) ===== */
     .icon{
       width:48px;
       height:48px;
       object-fit:contain;
-      display:block;
       margin-bottom:12px;
     }
 
@@ -77,6 +75,17 @@
     @media(max-width:900px){
       main.page-section{grid-template-columns:1fr}
       .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
+    }
+
+    /* ===== ICON SIZE (Original Requirement) ===== */
+    .card[data-type="service"] .icon,
+    .card[data-type="for-sale"] .icon,
+    .card[data-type="for-rent"] .icon {
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-radius:12px;
+      margin-bottom:20px;
     }
 
     #loader{
@@ -113,80 +122,4 @@
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
-<main id="close-a-deal-page" class="page-section"></main>
-<main id="about-page" class="page-section"></main>
-<main id="contact-page" class="page-section"></main>
-
-<script>
-const API =
-  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
-
-fetch(API)
-  .then(r => r.json())
-  .then(data => {
-    renderItems(data.items || []);
-    switchPage('home');
-  })
-  .finally(() => {
-    document.body.classList.add('loaded');
-  });
-
-function sizeToClass(size){
-  const s = String(size || '').toLowerCase().trim();
-  if (s === 'full') return 'span-full';
-  if (s === '2x2') return 'span-2x2';
-  if (s === '2x1') return 'span-2x1';
-  if (s === '1x2') return 'span-1x2';
-  return '';
-}
-
-function renderItems(items){
-  items.forEach(i => {
-    const page = String(i.page || 'home').toLowerCase().trim();
-    const container = document.getElementById(`${page}-page`);
-    if (!container) return;
-
-    const type = String(i.type || 'card').toLowerCase().trim();
-    let el = document.createElement('div');
-
-    if (type === 'hero' || type === 'hero-banner') {
-      el.className = 'card span-full';
-      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
-    }
-    else if (type === 'section-title') {
-      el.className = 'span-full section-title';
-      el.innerHTML = `<h2>${i.title}</h2>`;
-    }
-    else if (type === 'text-block') {
-      el.className = 'span-full';
-      el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
-    }
-    else if (type === 'review') {
-      el.className = `card ${sizeToClass(i.size)}`;
-      el.innerHTML = `<p>${i.subtitle || ''}</p><h4>${i.title}</h4>`;
-    }
-    else {
-      el.className = `card ${sizeToClass(i.size)}`;
-      el.innerHTML = `
-        ${i.iconurl ? `<img class="icon" src="${i.iconurl}">` : ''}
-        <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
-      `;
-    }
-
-    container.appendChild(el);
-  });
-}
-
-function switchPage(page){
-  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(`${page}-page`);
-  if (target) {
-    target.classList.add('active');
-    window.scrollTo(0,0);
-  }
-}
-</script>
-
-</body>
-</html>
+<main id="close-a-deal-page" cl
