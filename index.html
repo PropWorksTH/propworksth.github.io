@@ -45,12 +45,9 @@
       max-width:1200px;
       margin:auto;
       padding:20px;
-      display:none;
+      display:grid;
       grid-template-columns:repeat(4,1fr);
       gap:32px;
-    }
-    main.page-section.active{
-      display:grid;
     }
 
     .card{
@@ -85,17 +82,13 @@
   <div class="nav">
     <div>PropWorks</div>
     <div class="menu">
-      <div onclick="renderPage('items')">Home</div>
-      <div onclick="renderPage('contact')">Contact</div>
-      <div onclick="renderPage('close-deal')">Close Deal</div>
+      <div>Home</div>
     </div>
   </div>
 </nav>
 
-<!-- PAGE TARGETS (ต้องตรงกับ API page value) -->
-<main id="items-page" class="page-section active"></main>
-<main id="contact-page" class="page-section"></main>
-<main id="close-deal-page" class="page-section"></main>
+<!-- ใช้ container เดียวเหมือนเวอร์ชันเดิม -->
+<main id="items-page" class="page-section"></main>
 
 <script>
 const API =
@@ -107,37 +100,26 @@ fetch(API)
   .then(r => r.json())
   .then(data => {
     allItems = data.items || [];
-    renderPage('items');   // ✅ ตรงกับ API
+    renderItems();
   })
   .catch(err => console.error(err))
   .finally(() => {
     document.body.classList.add('loaded');
   });
 
-function renderPage(page) {
-  document.querySelectorAll('.page-section')
-    .forEach(s => s.innerHTML = '');
+function renderItems() {
+  const container = document.getElementById('items-page');
+  container.innerHTML = '';
 
-  allItems
-    .filter(i => i.page === page)
-    .forEach(i => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
-      `;
-      document.getElementById(page + '-page').appendChild(card);
-    });
-
-  switchPage(page);
-}
-
-function switchPage(p) {
-  document.querySelectorAll('.page-section')
-    .forEach(s => s.classList.remove('active'));
-  document.getElementById(p + '-page').classList.add('active');
-  window.scrollTo(0,0);
+  allItems.forEach(i => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${i.title}</h3>
+      <p>${i.subtitle || ''}</p>
+    `;
+    container.appendChild(card);
+  });
 }
 </script>
 
