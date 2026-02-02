@@ -107,4 +107,33 @@ fetch(API)
     renderItems(data.items || []);
   })
   .finally(() => {
-    document.bo
+    document.body.classList.add('loaded');
+  });
+
+function sizeToClass(size){
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
+}
+
+function renderItems(items) {
+  const container = document.getElementById('items-page');
+  container.innerHTML = '';
+
+  items.forEach(i => {
+    const card = document.createElement('div');
+    card.className = `card ${sizeToClass(i.size)}`;
+    card.innerHTML = `
+      <h3>${i.title}</h3>
+      <p>${i.subtitle || ''}</p>
+    `;
+    container.appendChild(card);
+  });
+}
+</script>
+
+</body>
+</html>
