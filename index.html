@@ -25,11 +25,14 @@
       color:var(--txt);
       padding-top:70px;
     }
+
+    /* NAV */
     nav{
       position:fixed;top:0;left:0;right:0;height:60px;
       background:rgba(3,69,157,.85);
       display:flex;align-items:center;justify-content:center;
       backdrop-filter:blur(12px);
+      z-index:1000;
     }
     .nav{
       width:100%;max-width:1200px;
@@ -39,77 +42,6 @@
     .menu{display:flex;gap:20px}
     .menu div{cursor:pointer}
 
-    /* === PAGE CONTAINER === */
+    /* PAGE */
     main.page-section{
-      max-width:1200px;
-      margin:auto;
-      padding:20px;
-      display:none;
-      grid-template-columns:repeat(4,1fr);
-      gap:32px;
-    }
-    main.page-section.active{
-      display:grid;
-    }
-
-    .card{
-      background:var(--card);
-      border:var(--border);
-      border-radius:var(--r);
-      padding:24px;
-      min-height:200px;
-    }
-    @media(max-width:900px){
-      main.page-section{grid-template-columns:1fr}
-    }
-
-    #loader{
-      position:fixed;inset:0;
-      background:#000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-    }
-    body.loaded #loader{display:none}
-  </style>
-</head>
-
-<body>
-
-<div id="loader">Loading…</div>
-
-<nav>
-  <div class="nav">
-    <div>PropWorks</div>
-    <div class="menu">
-      <div onclick="renderPage('home')">Home</div>
-      <div onclick="renderPage('services')">Services</div>
-      <div onclick="renderPage('listings')">Listings</div>
-      <div onclick="renderPage('about')">About</div>
-    </div>
-  </div>
-</nav>
-
-<!-- ✅ เพิ่ม page targets ให้ JS -->
-<main id="home-page" class="page-section active"></main>
-<main id="services-page" class="page-section"></main>
-<main id="listings-page" class="page-section"></main>
-<main id="about-page" class="page-section"></main>
-
-<script>
-const API =
-  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
-
-let allItems = [];
-
-fetch(API)
-  .then(r => r.json())
-  .then(data => {
-    allItems = data.items || [];
-    renderPage('home');
-    document.body.classList.add('loaded');
-  });
-
-function renderPage(page) {
-  document.querySelectorAll('.pag
+      max-wid
