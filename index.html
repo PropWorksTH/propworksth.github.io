@@ -137,13 +137,49 @@ function renderItems(items){
     const container = document.getElementById(`${page}-page`);
     if (!container) return;
 
-    const card = document.createElement('div');
-    card.className = `card ${sizeToClass(i.size)}`;
-    card.innerHTML = `
-      <h3>${i.title}</h3>
-      <p>${i.subtitle || ''}</p>
-    `;
-    container.appendChild(card);
+    const type = String(i.type || 'card').toLowerCase().trim();
+    let el = document.createElement('div');
+
+    // ===== HERO / BANNER =====
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.innerHTML = `
+        <h1>${i.title}</h1>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    // ===== SECTION TITLE =====
+    else if (type === 'section-title') {
+      el.className = 'span-full';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+
+    // ===== TEXT BLOCK =====
+    else if (type === 'text-block') {
+      el.className = 'span-full';
+      el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
+    }
+
+    // ===== CONTACT CTA =====
+    else if (type === 'contact') {
+      el.className = 'card span-full';
+      el.innerHTML = `
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    // ===== CARD-BASED TYPES =====
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.innerHTML = `
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    container.appendChild(el);
   });
 }
 
