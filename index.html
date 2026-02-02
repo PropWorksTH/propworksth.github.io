@@ -58,6 +58,7 @@
       min-height:200px;
     }
 
+    /* ===== SIZE (DESKTOP) ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -99,6 +100,7 @@
   </div>
 </nav>
 
+<!-- PAGES -->
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
@@ -110,24 +112,15 @@
 const API =
   'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
-/* === PAGE MAP (จุดแก้จริง) === */
-const PAGE_MAP = {
-  home: 'home',
-  services: 'services',
-  listings: 'listings',
-  'close a deal': 'close-a-deal',
-  'close-deal': 'close-a-deal',
-  about: 'about',
-  contact: 'contact'
-};
-
 fetch(API)
   .then(r => r.json())
   .then(data => {
     renderItems(data.items || []);
     switchPage('home');
   })
-  .finally(() => document.body.classList.add('loaded'));
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
 
 function sizeToClass(size){
   const s = String(size || '').toLowerCase().trim();
@@ -138,20 +131,18 @@ function sizeToClass(size){
   return '';
 }
 
-function normalizePage(p){
-  const key = String(p || 'home').toLowerCase().trim();
-  return PAGE_MAP[key] || 'home';
-}
-
 function renderItems(items){
   items.forEach(i => {
-    const page = normalizePage(i.page);
+    const page = String(i.page || 'home').toLowerCase().trim();
     const container = document.getElementById(`${page}-page`);
     if (!container) return;
 
     const card = document.createElement('div');
     card.className = `card ${sizeToClass(i.size)}`;
-    card.innerHTML = `<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    card.innerHTML = `
+      <h3>${i.title}</h3>
+      <p>${i.subtitle || ''}</p>
+    `;
     container.appendChild(card);
   });
 }
@@ -160,7 +151,7 @@ function switchPage(page){
   document.querySelectorAll('.page-section')
     .forEach(p => p.classList.remove('active'));
   const target = document.getElementById(`${page}-page`);
-  if (target){
+  if (target) {
     target.classList.add('active');
     window.scrollTo(0,0);
   }
