@@ -1,36 +1,41 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>PropWorks Thailand</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="content-language" content="th">
+  <meta name="geo.region" content="TH">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
 
   <style>
     :root{
-      --bg:#002C66;
-      --card:#03459D;
-      --txt:#fff;
-      --border:1px solid rgba(255,255,255,.15);
-      --r:20px;
+      --bg-color:#002C66;
+      --card-bg:#03459D;
+      --text-main:#fff;
+      --text-sec:#F5F5F7;
+      --accent:#2997FF;
+      --nav-bg:rgba(3,69,157,.85);
+      --border:1px solid rgba(255,255,255,.12);
+      --radius:20px;
     }
+
     *{box-sizing:border-box;margin:0;padding:0}
     body{
       font-family:'Kanit',sans-serif;
-      background:var(--bg);
-      color:var(--txt);
-      padding-top:60px; /* Step 1: ตรงกับ nav */
+      background:var(--bg-color);
+      color:var(--text-main);
+      padding-top:60px;   /* Step 1 */
+      padding-bottom:80px;
+      overflow-x:hidden;
     }
 
+    /* App Shell — NAV */
     nav{
-      position:fixed;top:0;left:0;right:0;height:60px;
-      background:rgba(3,69,157,.85);
-      display:flex;align-items:center;justify-content:center;
-      backdrop-filter:blur(12px);
-      z-index:1000;
-    }
-    .nav{
-      width:100%;max-width:1200p
+      position:fixed;
+      top:0;left:0;right:0;
+      height:60px;
+      background:var(--nav-bg);
