@@ -26,7 +26,6 @@
       padding-top:70px;
     }
 
-    /* NAV */
     nav{
       position:fixed;top:0;left:0;right:0;height:60px;
       background:rgba(3,69,157,.85);
@@ -42,6 +41,105 @@
     .menu{display:flex;gap:20px}
     .menu div{cursor:pointer}
 
-    /* PAGE */
     main.page-section{
-      max-wid
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+      display:none;
+      grid-template-columns:repeat(4,1fr);
+      gap:32px;
+    }
+    main.page-section.active{
+      display:grid;
+    }
+
+    .card{
+      background:var(--card);
+      border:var(--border);
+      border-radius:var(--r);
+      padding:24px;
+      min-height:200px;
+    }
+
+    @media(max-width:900px){
+      main.page-section{grid-template-columns:1fr}
+    }
+
+    #loader{
+      position:fixed;inset:0;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    body.loaded #loader{display:none}
+  </style>
+</head>
+
+<body>
+
+<div id="loader">Loading…</div>
+
+<nav>
+  <div class="nav">
+    <div>PropWorks</div>
+    <div class="menu">
+      <div onclick="renderPage('items')">Home</div>
+      <div onclick="renderPage('contact')">Contact</div>
+      <div onclick="renderPage('close-deal')">Close Deal</div>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE TARGETS (ต้องตรงกับ API page value) -->
+<main id="items-page" class="page-section active"></main>
+<main id="contact-page" class="page-section"></main>
+<main id="close-deal-page" class="page-section"></main>
+
+<script>
+const API =
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+
+let allItems = [];
+
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
+    allItems = data.items || [];
+    renderPage('items');   // ✅ ตรงกับ API
+  })
+  .catch(err => console.error(err))
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
+
+function renderPage(page) {
+  document.querySelectorAll('.page-section')
+    .forEach(s => s.innerHTML = '');
+
+  allItems
+    .filter(i => i.page === page)
+    .forEach(i => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+      document.getElementById(page + '-page').appendChild(card);
+    });
+
+  switchPage(page);
+}
+
+function switchPage(p) {
+  document.querySelectorAll('.page-section')
+    .forEach(s => s.classList.remove('active'));
+  document.getElementById(p + '-page').classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
