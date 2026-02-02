@@ -38,10 +38,8 @@
       display:flex;justify-content:space-between;
       padding:0 20px;
     }
-    .menu{display:flex;gap:20px}
-    .menu div{cursor:pointer}
 
-    main{
+    main.page-section{
       max-width:1200px;
       margin:auto;
       padding:20px;
@@ -55,11 +53,19 @@
       border:var(--border);
       border-radius:var(--r);
       padding:24px;
-      min-height:200px;
+      min-height:160px;
     }
 
+    /* === SIZE FROM GSHEET === */
+    .size-small{ grid-column: span 1; }
+    .size-medium{ grid-column: span 2; }
+    .size-large{ grid-column: span 4; }
+
     @media(max-width:900px){
-      main{grid-template-columns:1fr}
+      main.page-section{grid-template-columns:1fr}
+      .size-small,
+      .size-medium,
+      .size-large{ grid-column: span 1; }
     }
 
     #loader{
@@ -81,42 +87,38 @@
 <nav>
   <div class="nav">
     <div>PropWorks</div>
-    <div class="menu">
-      <div>Home</div>
-    </div>
   </div>
 </nav>
 
-<!-- container เดียว = home -->
-<main id="home-page"></main>
+<main id="items-page" class="page-section"></main>
 
 <script>
 const API =
   'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
-/* 🔑 ปลด loader ทันที ไม่รอ API */
-document.body.classList.add('loaded');
-
 fetch(API)
   .then(r => r.json())
-  .then(data => {
-    const items = (data.items || []).filter(i => i.page === 'home');
-    const container = document.getElementById('home-page');
-    container.innerHTML = '';
+  .then(data => renderItems(data.items || []))
+  .finally(() => document.body.classList.add('loaded'));
 
-    items.forEach(i => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
-      `;
-      container.appendChild(card);
-    });
-  })
-  .catch(err => {
-    console.error(err);
+function renderItems(items) {
+  const container = document.getElementById('items-page');
+  container.innerHTML = '';
+
+  items.forEach(i => {
+    const card = document.createElement('div');
+
+    const sizeClass = 'size-' + (i.size || 'small');
+
+    card.className = `card ${sizeClass}`;
+    card.innerHTML = `
+      <h3>${i.title}</h3>
+      <p>${i.subtitle || ''}</p>
+    `;
+
+    container.appendChild(card);
   });
+}
 </script>
 
 </body>
