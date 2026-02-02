@@ -16,6 +16,7 @@
       --txt:#fff;
       --border:1px solid rgba(255,255,255,.15);
       --r:20px;
+      --hover:#0b5cff;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -40,14 +41,13 @@
     .menu{display:flex;gap:20px}
     .menu div{cursor:pointer}
 
-    /* ===== PAGE GRID ===== */
     main.page-section{
       max-width:1200px;
       margin:auto;
       padding:20px;
       display:none;
       grid-template-columns:repeat(4,1fr);
-      gap:24px; /* Original = แน่นกว่าเดิม */
+      gap:32px;
     }
     main.page-section.active{display:grid}
 
@@ -56,8 +56,22 @@
       background:var(--card);
       border:var(--border);
       border-radius:var(--r);
-      padding:20px; /* Original แน่นกว่า */
-      min-height:180px;
+      padding:24px;
+      min-height:200px;
+      transition:transform .25s ease, background .25s ease, box-shadow .25s ease;
+    }
+
+    /* hover แบบ Original */
+    a.card-link:hover .card{
+      transform:translateY(-4px);
+      background:var(--hover);
+      box-shadow:0 12px 30px rgba(0,0,0,.35);
+    }
+
+    a.card-link{
+      text-decoration:none;
+      color:inherit;
+      display:block;
     }
 
     /* ===== SIZE ===== */
@@ -72,9 +86,30 @@
       .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
     }
 
-    /* ===== FONT SIZE (Original) ===== */
-    .page-section .card h1{
-      font-size:40px;
-      font-weight:600;
-      line-height:1.25;
-      margin-
+    #loader{
+      position:fixed;inset:0;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    body.loaded #loader{display:none}
+
+    /* ===== SECTION TITLE (non-card) ===== */
+    .section-title{
+      grid-column:1 / -1;
+      padding:80px 0 16px;
+    }
+    .section-title h2{
+      font-size:42px;
+      font-weight:500;
+    }
+
+    /* ===== TEXT BLOCK (Original = no card) ===== */
+    .text-block{
+      grid-column:1 / -1;
+      font-size:16px;
+      line-height:1.7;
+      opacity:.95;
+    }
