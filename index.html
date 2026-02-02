@@ -51,7 +51,6 @@
     main.page-section.active{display:grid}
 
     .card{
-      position:relative;
       background:var(--card);
       border:var(--border);
       border-radius:var(--r);
@@ -59,27 +58,29 @@
       min-height:200px;
     }
 
-    .card h3{font-size:20px;font-weight:500;margin-bottom:8px}
-    .card p{font-size:15px;opacity:.95}
-
-    /* ICON */
+    /* icon (baseline) */
     .icon{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      margin-bottom:16px;
+    }
+
+    /* service / for-sale / for-rent : icon ใหญ่ */
+    .card[data-type="service"] .icon,
+    .card[data-type="for-sale"] .icon,
+    .card[data-type="for-rent"] .icon{
       width:100%;
       height:180px;
       object-fit:cover;
       border-radius:12px;
       margin-bottom:20px;
-      display:block;
     }
 
-    /* SECTION TITLE (ไม่เป็น card) */
-    .section-title{
-      grid-column:1 / -1;
-      padding:8px 0;
-    }
+    /* section title (ไม่ใช่ card) */
     .section-title h2{
-      font-size:26px;
-      font-weight:600;
+      font-size:28px;
+      font-weight:500;
     }
 
     /* ===== SIZE (DESKTOP) ===== */
@@ -88,45 +89,10 @@
       .span-2x2{grid-column:span 2; grid-row:span 2}
       .span-2x1{grid-column:span 2}
       .span-1x2{grid-row:span 2}
-
-      /* Service icon sizing by size */
-      .card.span-2x2[data-type="service"] .icon{height:380px}
-      .card.span-2x1[data-type="service"] .icon{height:220px}
     }
     @media(max-width:900px){
       main.page-section{grid-template-columns:1fr}
       .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
-    }
-
-    /* Contact icon */
-    .card[data-type="contact"] .icon{
-      width:80px;
-      height:80px;
-      object-fit:contain;
-    }
-
-    /* Badges */
-    .card[data-type="for-sale"]::after{
-      content:"For Sale";
-      position:absolute;
-      top:16px;right:16px;
-      background:red;
-      color:#fff;
-      padding:6px 14px;
-      border-radius:999px;
-      font-weight:600;
-      font-size:12px;
-    }
-    .card[data-type="for-rent"]::after{
-      content:"For Rent";
-      position:absolute;
-      top:16px;right:16px;
-      background:#00FF00;
-      color:#008000;
-      padding:6px 14px;
-      border-radius:999px;
-      font-weight:600;
-      font-size:12px;
     }
 
     #loader{
@@ -197,37 +163,64 @@ function renderItems(items){
     if (!container) return;
 
     const type = String(i.type || 'card').toLowerCase().trim();
-    let el;
+    let el = document.createElement('div');
 
-    /* SECTION TITLE */
-    if (type === 'section-title'){
-      el = document.createElement('div');
-      el.className = 'section-title';
-      el.innerHTML = `<h2>${i.title || ''}</h2>`;
-      container.appendChild(el);
-      return;
-    }
+    /* รองรับ key icon ทุกแบบ — กัน JS error */
+    const icon = i.iconUrl || i.iconURL || i.IconURL || '';
+    const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
 
-    el = document.createElement('div');
-    el.className = `card ${sizeToClass(i.size)}`;
-    el.dataset.type = type;
-
-    let iconHTML = '';
-    if (i.iconURL){
-      iconHTML = `<img class="icon" src="${i.iconURL}" alt="">`;
-    }
-
-    /* REVIEW: subtitle บน title ล่าง */
-    if (type === 'review'){
+    // HERO
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
       el.innerHTML = `
-        ${iconHTML}
+        <h1>${i.title}</h1>
         <p>${i.subtitle || ''}</p>
-        <h3>${i.title || ''}</h3>
       `;
-    } else {
+    }
+
+    // SECTION TITLE
+    else if (type === 'section-title') {
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+
+    // TEXT BLOCK (Original = card)
+    else if (type === 'text-block') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `
+        <p>${i.subtitle || i.title || ''}</p>
+      `;
+    }
+
+    // REVIEW (subtitle บน / title ล่าง)
+    else if (type === 'review') {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
+      el.innerHTML = `
+        <p>${i.subtitle || ''}</p>
+        <h3>${i.title}</h3>
+      `;
+    }
+
+    // CONTACT
+    else if (type === 'contact') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    // DEFAULT CARD (service / for-sale / for-rent ฯลฯ)
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
       el.innerHTML = `
         ${iconHTML}
-        <h3>${i.title || ''}</h3>
+        <h3>${i.title}</h3>
         <p>${i.subtitle || ''}</p>
       `;
     }
@@ -240,7 +233,7 @@ function switchPage(page){
   document.querySelectorAll('.page-section')
     .forEach(p => p.classList.remove('active'));
   const target = document.getElementById(`${page}-page`);
-  if (target){
+  if (target) {
     target.classList.add('active');
     window.scrollTo(0,0);
   }
