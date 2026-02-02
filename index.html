@@ -5,7 +5,6 @@
   <title>PropWorks Thailand</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -45,10 +44,11 @@
       max-width:1200px;
       margin:auto;
       padding:20px;
-      display:grid;
+      display:none;
       grid-template-columns:repeat(4,1fr);
       gap:32px;
     }
+    main.page-section.active{display:grid}
 
     .card{
       background:var(--card);
@@ -58,8 +58,15 @@
       min-height:200px;
     }
 
+    @media (min-width:900px){
+      .span-full{grid-column:1 / -1}
+      .span-2x2{grid-column:span 2; grid-row:span 2}
+      .span-2x1{grid-column:span 2}
+      .span-1x2{grid-row:span 2}
+    }
     @media(max-width:900px){
       main.page-section{grid-template-columns:1fr}
+      .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
     }
 
     #loader{
@@ -73,3 +80,92 @@
     body.loaded #loader{display:none}
   </style>
 </head>
+
+<body>
+
+<div id="loader">Loading…</div>
+
+<nav>
+  <div class="nav">
+    <div>PropWorks</div>
+    <div class="menu">
+      <div onclick="switchPage('home')">Home</div>
+      <div onclick="switchPage('services')">Services</div>
+      <div onclick="switchPage('listings')">Listings</div>
+      <div onclick="switchPage('close-a-deal')">Close a Deal</div>
+      <div onclick="switchPage('about')">About</div>
+      <div onclick="switchPage('contact')">Contact</div>
+    </div>
+  </div>
+</nav>
+
+<main id="home-page" class="page-section"></main>
+<main id="services-page" class="page-section"></main>
+<main id="listings-page" class="page-section"></main>
+<main id="close-a-deal-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
+<main id="contact-page" class="page-section"></main>
+
+<script>
+const API =
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+
+/* === PAGE MAP (จุดแก้จริง) === */
+const PAGE_MAP = {
+  home: 'home',
+  services: 'services',
+  listings: 'listings',
+  'close a deal': 'close-a-deal',
+  'close-deal': 'close-a-deal',
+  about: 'about',
+  contact: 'contact'
+};
+
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
+    renderItems(data.items || []);
+    switchPage('home');
+  })
+  .finally(() => document.body.classList.add('loaded'));
+
+function sizeToClass(size){
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
+}
+
+function normalizePage(p){
+  const key = String(p || 'home').toLowerCase().trim();
+  return PAGE_MAP[key] || 'home';
+}
+
+function renderItems(items){
+  items.forEach(i => {
+    const page = normalizePage(i.page);
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
+
+    const card = document.createElement('div');
+    card.className = `card ${sizeToClass(i.size)}`;
+    card.innerHTML = `<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    container.appendChild(card);
+  });
+}
+
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target){
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+}
+</script>
+
+</body>
+</html>
