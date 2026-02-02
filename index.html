@@ -156,14 +156,14 @@ function sizeToClass(size){
 
 /* ===== ICON + LINK BUILDER ===== */
 function buildContent(i, inner){
-  const icon = i.IconURL
-  ? `<img src="${i.IconURL}" class="icon" alt="">`
+  const icon = i.iconUrl
+  ? `<img src="${i.iconUrl}" class="icon" alt="">`
   : '';
 
   const body = `${icon}${inner}`;
 
-  if (i.LinkURL) {
-  return `<a href="${i.LinkURL}" class="card-link">${body}</a>`;
+  if (i.linkUrl) {
+  el.innerHTML = `<a href="${i.linkUrl}" class="card-link">${body}</a>`;
 }
   return body;
 }
