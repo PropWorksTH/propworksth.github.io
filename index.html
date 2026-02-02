@@ -16,7 +16,6 @@
       --txt:#fff;
       --border:1px solid rgba(255,255,255,.15);
       --r:20px;
-      --hover:#0b5cff;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -51,30 +50,27 @@
     }
     main.page-section.active{display:grid}
 
-    /* ===== CARD ===== */
     .card{
       background:var(--card);
       border:var(--border);
       border-radius:var(--r);
       padding:24px;
       min-height:200px;
-      transition:transform .25s ease, background .25s ease, box-shadow .25s ease;
+      transition:transform .25s ease, box-shadow .25s ease;
     }
 
-    /* hover แบบ Original */
-    a.card-link:hover .card{
-      transform:translateY(-4px);
-      background:var(--hover);
-      box-shadow:0 12px 30px rgba(0,0,0,.35);
-    }
-
-    a.card-link{
+    /* ===== LINK + HOVER ===== */
+    .card-link{
+      display:block;
       text-decoration:none;
       color:inherit;
-      display:block;
+    }
+    .card-link:hover .card{
+      transform:translateY(-4px);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
     }
 
-    /* ===== SIZE ===== */
+    /* ===== SIZE (DESKTOP) ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -95,21 +91,132 @@
       z-index:9999;
     }
     body.loaded #loader{display:none}
+  </style>
+</head>
 
-    /* ===== SECTION TITLE (non-card) ===== */
-    .section-title{
-      grid-column:1 / -1;
-      padding:80px 0 16px;
-    }
-    .section-title h2{
-      font-size:42px;
-      font-weight:500;
+<body>
+
+<div id="loader">Loading…</div>
+
+<nav>
+  <div class="nav">
+    <div>PropWorks</div>
+    <div class="menu">
+      <div onclick="switchPage('home')">Home</div>
+      <div onclick="switchPage('services')">Services</div>
+      <div onclick="switchPage('listings')">Listings</div>
+      <div onclick="switchPage('close-a-deal')">Close a Deal</div>
+      <div onclick="switchPage('about')">About</div>
+      <div onclick="switchPage('contact')">Contact</div>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGES -->
+<main id="home-page" class="page-section"></main>
+<main id="services-page" class="page-section"></main>
+<main id="listings-page" class="page-section"></main>
+<main id="close-a-deal-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
+<main id="contact-page" class="page-section"></main>
+
+<script>
+const API =
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
+    renderItems(data.items || []);
+    switchPage('home');
+  })
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
+
+function sizeToClass(size){
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
+}
+
+function renderItems(items){
+  items.forEach(i => {
+    const page = String(i.page || 'home').toLowerCase().trim();
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
+
+    const type = String(i.type || 'card').toLowerCase().trim();
+    let el = document.createElement('div');
+
+    // ===== HERO / BANNER =====
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.innerHTML = `
+        <h1>${i.title}</h1>
+        <p>${i.subtitle || ''}</p>
+      `;
     }
 
-    /* ===== TEXT BLOCK (Original = no card) ===== */
-    .text-block{
-      grid-column:1 / -1;
-      font-size:16px;
-      line-height:1.7;
-      opacity:.95;
+    // ===== SECTION TITLE =====
+    else if (type === 'section-title') {
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
     }
+
+    // ===== TEXT BLOCK =====
+    else if (type === 'text-block') {
+      el.className = 'span-full';
+      el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
+    }
+
+    // ===== CONTACT CTA =====
+    else if (type === 'contact') {
+      el.className = 'card span-full';
+      el.innerHTML = `
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    // ===== CARD-BASED TYPES (WITH LINK + HOVER) =====
+    else {
+      const link = i.linkURL || '';
+      const cardHTML = `
+        <div class="card ${sizeToClass(i.size)}">
+          <h3>${i.title}</h3>
+          <p>${i.subtitle || ''}</p>
+        </div>
+      `;
+
+      if (link) {
+        el.innerHTML = `
+          <a href="${link}" class="card-link">
+            ${cardHTML}
+          </a>
+        `;
+      } else {
+        el.innerHTML = cardHTML;
+      }
+    }
+
+    container.appendChild(el);
+  });
+}
+
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+}
+</script>
+
+</body>
+</html>
