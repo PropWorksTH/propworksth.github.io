@@ -44,10 +44,11 @@
       max-width:1200px;
       margin:auto;
       padding:20px;
-      display:grid;
+      display:none;
       grid-template-columns:repeat(4,1fr);
       gap:32px;
     }
+    main.page-section.active{display:grid}
 
     .card{
       background:var(--card);
@@ -64,7 +65,6 @@
       .span-2x1{grid-column:span 2}
       .span-1x2{grid-row:span 2}
     }
-
     @media(max-width:900px){
       main.page-section{grid-template-columns:1fr}
       .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
@@ -90,12 +90,23 @@
   <div class="nav">
     <div>PropWorks</div>
     <div class="menu">
-      <div>Home</div>
+      <div onclick="switchPage('home')">Home</div>
+      <div onclick="switchPage('services')">Services</div>
+      <div onclick="switchPage('listings')">Listings</div>
+      <div onclick="switchPage('close-a-deal')">Close a Deal</div>
+      <div onclick="switchPage('about')">About</div>
+      <div onclick="switchPage('contact')">Contact</div>
     </div>
   </div>
 </nav>
 
-<main id="items-page" class="page-section"></main>
+<!-- PAGES -->
+<main id="home-page" class="page-section"></main>
+<main id="services-page" class="page-section"></main>
+<main id="listings-page" class="page-section"></main>
+<main id="close-a-deal-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
+<main id="contact-page" class="page-section"></main>
 
 <script>
 const API =
@@ -105,6 +116,7 @@ fetch(API)
   .then(r => r.json())
   .then(data => {
     renderItems(data.items || []);
+    switchPage('home');
   })
   .finally(() => {
     document.body.classList.add('loaded');
@@ -119,11 +131,12 @@ function sizeToClass(size){
   return '';
 }
 
-function renderItems(items) {
-  const container = document.getElementById('items-page');
-  container.innerHTML = '';
-
+function renderItems(items){
   items.forEach(i => {
+    const page = String(i.page || 'home').toLowerCase().trim();
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
+
     const card = document.createElement('div');
     card.className = `card ${sizeToClass(i.size)}`;
     card.innerHTML = `
@@ -132,6 +145,16 @@ function renderItems(items) {
     `;
     container.appendChild(card);
   });
+}
+
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
 }
 </script>
 
