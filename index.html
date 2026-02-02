@@ -94,6 +94,9 @@
 const API =
   'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
+/* 🔑 ปลด loader ทันที ไม่รอ API */
+document.body.classList.add('loaded');
+
 fetch(API)
   .then(r => r.json())
   .then(data => {
@@ -111,8 +114,8 @@ fetch(API)
       container.appendChild(card);
     });
   })
-  .finally(() => {
-    document.body.classList.add('loaded');
+  .catch(err => {
+    console.error(err);
   });
 </script>
 
