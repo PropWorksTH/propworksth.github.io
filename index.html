@@ -1,43 +1,22 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="utf-8">
-  <title>PropWorks Thailand</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ===== CPF : FIX LINK + HOVER (SAFE / ORIGINAL-LIKE) ===== -->
+<style>
+  /* link ปกติ */
+  a{
+    color:#ffffff;          /* fix: กัน text หาย */
+    text-decoration:none;
+  }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  /* hover เบา ๆ ไม่ underline */
+  a:hover{
+    color:#cfe0ff;
+  }
 
-  <style>
-    :root{
-      --bg:#002C66;
-      --card:#03459D;
-      --txt:#fff;
-      --border:1px solid rgba(255,255,255,.15);
-      --r:20px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Kanit',sans-serif;
-      background:var(--bg);
-      color:var(--txt);
-      padding-top:70px;
-    }
-
-    nav{
-      position:fixed;top:0;left:0;right:0;height:60px;
-      background:rgba(3,69,157,.85);
-      display:flex;align-items:center;justify-content:center;
-      backdrop-filter:blur(12px);
-      z-index:1000;
-    }
-    .nav{
-      width:100%;max-width:1200px;
-      display:flex;justify-content:space-between;
-      padding:0 20px;
-    }
-    .menu{display:flex;gap:20px}
-    .menu div{cursor:pointer}
-
-    main.
+  /* menu / clickable item */
+  .menu div{
+    color:#ffffff;
+    cursor:pointer;
+  }
+  .menu div:hover{
+    color:#cfe0ff;
+  }
+</style>
