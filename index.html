@@ -39,14 +39,19 @@
     .menu{display:flex;gap:20px}
     .menu div{cursor:pointer}
 
-    main{
+    /* === PAGE CONTAINER === */
+    main.page-section{
       max-width:1200px;
       margin:auto;
       padding:20px;
-      display:grid;
+      display:none;
       grid-template-columns:repeat(4,1fr);
       gap:32px;
     }
+    main.page-section.active{
+      display:grid;
+    }
+
     .card{
       background:var(--card);
       border:var(--border);
@@ -55,7 +60,7 @@
       min-height:200px;
     }
     @media(max-width:900px){
-      main{grid-template-columns:1fr}
+      main.page-section{grid-template-columns:1fr}
     }
 
     #loader{
@@ -78,15 +83,19 @@
   <div class="nav">
     <div>PropWorks</div>
     <div class="menu">
-      <div>Home</div>
-      <div>Services</div>
-      <div>Listings</div>
-      <div>About</div>
+      <div onclick="renderPage('home')">Home</div>
+      <div onclick="renderPage('services')">Services</div>
+      <div onclick="renderPage('listings')">Listings</div>
+      <div onclick="renderPage('about')">About</div>
     </div>
   </div>
 </nav>
 
-<main id="app"></main>
+<!-- ✅ เพิ่ม page targets ให้ JS -->
+<main id="home-page" class="page-section active"></main>
+<main id="services-page" class="page-section"></main>
+<main id="listings-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
 
 <script>
 const API =
@@ -103,32 +112,4 @@ fetch(API)
   });
 
 function renderPage(page) {
-  // ล้างทุกหน้า
-  document.querySelectorAll('.page-section').forEach(s => s.innerHTML = '');
-
-  // render เฉพาะ page นั้น
-  allItems
-    .filter(i => i.page === page)
-    .forEach(i => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
-      `;
-      document.getElementById(page + '-page').appendChild(card);
-    });
-
-  switchPage(page);
-}
-
-function switchPage(p) {
-  document.querySelectorAll('.page-section')
-    .forEach(s => s.classList.remove('active'));
-  document.getElementById(p + '-page').classList.add('active');
-  window.scrollTo(0,0);
-}
-</script>
-
-</body>
-</html>
+  document.querySelectorAll('.pag
