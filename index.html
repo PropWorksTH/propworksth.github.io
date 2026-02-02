@@ -50,38 +50,24 @@
     }
     main.page-section.active{display:grid}
 
-    /* ===== CARD ===== */
     .card{
       background:var(--card);
       border:var(--border);
       border-radius:var(--r);
       padding:24px;
       min-height:200px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      transition:.2s ease;
     }
 
-    /* ===== LINK (ครอบการ์ดทั้งใบ) ===== */
-    .card-link{
-      text-decoration:none;
-      color:inherit;
-      display:block;
-    }
-    .card-link:hover .card{
-      transform:translateY(-2px);
-      box-shadow:0 12px 30px rgba(0,0,0,.25);
-    }
-
-    /* ===== ICON ===== */
+    /* ===== ICON (ORIGINAL 1:1) ===== */
     .icon{
-      width:40px;
-      height:40px;
+      width:48px;
+      height:48px;
       object-fit:contain;
+      display:block;
+      margin-bottom:12px;
     }
 
-    /* ===== SIZE ===== */
+    /* ===== SIZE (DESKTOP) ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -160,35 +146,40 @@ function renderItems(items){
     const container = document.getElementById(`${page}-page`);
     if (!container) return;
 
-    const card = document.createElement('div');
-    card.className = `card ${sizeToClass(i.size)}`;
+    const type = String(i.type || 'card').toLowerCase().trim();
+    let el = document.createElement('div');
 
-    const icon = i.iconUrl
-      ? `<img src="${i.iconUrl}" class="icon">`
-      : '';
-
-    card.innerHTML = `
-      ${icon}
-      <h3>${i.title}</h3>
-      <p>${i.subtitle || ''}</p>
-    `;
-
-    // ===== LINK WRAP =====
-    if (i.linkUrl) {
-      const a = document.createElement('a');
-      a.href = i.linkUrl;
-      a.className = 'card-link';
-      a.appendChild(card);
-      container.appendChild(a);
-    } else {
-      container.appendChild(card);
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
     }
+    else if (type === 'section-title') {
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+    else if (type === 'text-block') {
+      el.className = 'span-full';
+      el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
+    }
+    else if (type === 'review') {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.innerHTML = `<p>${i.subtitle || ''}</p><h4>${i.title}</h4>`;
+    }
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.innerHTML = `
+        ${i.iconurl ? `<img class="icon" src="${i.iconurl}">` : ''}
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    container.appendChild(el);
   });
 }
 
 function switchPage(page){
-  document.querySelectorAll('.page-section')
-    .forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
   const target = document.getElementById(`${page}-page`);
   if (target) {
     target.classList.add('active');
