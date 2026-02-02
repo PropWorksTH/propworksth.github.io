@@ -151,9 +151,10 @@ function renderItems(items){
 
     // ===== SECTION TITLE =====
     else if (type === 'section-title') {
-      el.className = 'span-full';
-      el.innerHTML = `<h2>${i.title}</h2>`;
-    }
+  el = document.createElement('div');
+  el.className = 'span-full section-title';
+  el.innerHTML = `<h2>${i.title}</h2>`;
+  }
 
     // ===== TEXT BLOCK =====
     else if (type === 'text-block') {
