@@ -16,6 +16,7 @@
       --txt:#fff;
       --border:1px solid rgba(255,255,255,.15);
       --r:20px;
+      --muted:rgba(255,255,255,.7);
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -50,6 +51,7 @@
     }
     main.page-section.active{display:grid}
 
+    /* ===== CARD BASE ===== */
     .card{
       background:var(--card);
       border:var(--border);
@@ -58,7 +60,7 @@
       min-height:200px;
     }
 
-    /* ===== SIZE (DESKTOP) ===== */
+    /* ===== SIZE ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -69,6 +71,63 @@
       main.page-section{grid-template-columns:1fr}
       .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
     }
+
+    /* =================================================
+       TYPE : ORIGINAL LOOK (ไม่ใช้ card ถ้าไม่ควร)
+       ================================================= */
+
+    /* section-title */
+    .section-title{
+      grid-column:1 / -1;
+      padding:8px 0;
+      border-bottom:1px solid rgba(255,255,255,.2);
+    }
+    .section-title h2{
+      font-size:28px;
+      font-weight:500;
+    }
+
+    /* text-block */
+    .text-block{
+      grid-column:1 / -1;
+      font-size:18px;
+      line-height:1.7;
+      color:var(--muted);
+    }
+
+    /* hero / hero-banner */
+    .hero{
+      grid-column:1 / -1;
+      padding:64px 40px;
+      background:linear-gradient(135deg,#03459D,#002C66);
+      border-radius:var(--r);
+    }
+    .hero h1{font-size:42px;margin-bottom:16px}
+    .hero p{font-size:20px;color:var(--muted)}
+
+    /* service */
+    .service{min-height:180px}
+
+    /* stat */
+    .stat{
+      text-align:center;
+    }
+    .stat h3{font-size:36px}
+    .stat p{color:var(--muted)}
+
+    /* review */
+    .review{
+      font-style:italic;
+    }
+
+    /* contact */
+    .contact{
+      grid-column:1 / -1;
+    }
+
+    /* for-sale / for-rent */
+    .for-sale{}
+    .for-rent{}
 
     #loader{
       position:fixed;inset:0;
@@ -118,9 +177,7 @@ fetch(API)
     renderItems(data.items || []);
     switchPage('home');
   })
-  .finally(() => {
-    document.body.classList.add('loaded');
-  });
+  .finally(() => document.body.classList.add('loaded'));
 
 function sizeToClass(size){
   const s = String(size || '').toLowerCase().trim();
@@ -138,62 +195,34 @@ function renderItems(items){
     if (!container) return;
 
     const type = String(i.type || 'card').toLowerCase().trim();
-    let el = document.createElement('div');
+    let el;
 
-    // ===== HERO / BANNER =====
-    if (type === 'hero' || type === 'hero-banner') {
-      el.className = 'card span-full';
-      el.innerHTML = `
-        <h1>${i.title}</h1>
-        <p>${i.subtitle || ''}</p>
-      `;
+    if (type === 'section-title') {
+      el = document.createElement('div');
+      el.className = 'section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
     }
 
-    // ===== SECTION TITLE =====
-    else if (type === 'section-title') {
-  el = document.createElement('div');
-  el.className = 'span-full section-title';
-  el.innerHTML = `<h2>${i.title}</h2>`;
-  }
-
-    // ===== TEXT BLOCK =====
     else if (type === 'text-block') {
-      el.className = 'span-full';
+      el = document.createElement('div');
+      el.className = 'text-block';
       el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
     }
 
-    // ===== CONTACT CTA =====
-    else if (type === 'contact') {
-      el.className = 'card span-full';
-      el.innerHTML = `
-        <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
-      `;
+    else if (type === 'hero' || type === 'hero-banner') {
+      el = document.createElement('div');
+      el.className = 'hero';
+      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
     }
 
-    // ===== CARD-BASED TYPES =====
+    else if (['service','stat','review','for-sale','for-rent','contact'].includes(type)) {
+      el = document.createElement('div');
+      el.className = `card ${type} ${sizeToClass(i.size)}`;
+      el.innerHTML = `<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    }
+
     else {
+      el = document.createElement('div');
       el.className = `card ${sizeToClass(i.size)}`;
-      el.innerHTML = `
-        <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
-      `;
+      el.innerHTML = `<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
     }
-
-    container.appendChild(el);
-  });
-}
-
-function switchPage(page){
-  document.querySelectorAll('.page-section')
-    .forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(`${page}-page`);
-  if (target) {
-    target.classList.add('active');
-    window.scrollTo(0,0);
-  }
-}
-</script>
-
-</body>
-</html>
