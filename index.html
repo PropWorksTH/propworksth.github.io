@@ -58,14 +58,22 @@
       min-height:200px;
     }
 
+    /* ===== ICON ===== */
     .icon{
       width:48px;
       height:48px;
       object-fit:contain;
       margin-bottom:12px;
     }
+    .icon-big{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-radius:12px;
+      margin-bottom:20px;
+    }
 
-    /* ===== SIZE (DESKTOP) ===== */
+    /* ===== SIZE ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -75,17 +83,6 @@
     @media(max-width:900px){
       main.page-section{grid-template-columns:1fr}
       .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
-    }
-
-    /* ===== ICON SIZE (Original Requirement) ===== */
-    .card[data-type="service"] .icon,
-    .card[data-type="for-sale"] .icon,
-    .card[data-type="for-rent"] .icon {
-      width:100%;
-      height:180px;
-      object-fit:cover;
-      border-radius:12px;
-      margin-bottom:20px;
     }
 
     #loader{
@@ -122,4 +119,73 @@
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
-<main id="close-a-deal-page" cl
+<main id="close-a-deal-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
+<main id="contact-page" class="page-section"></main>
+
+<script>
+const API =
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
+    renderItems(data.items || []);
+    switchPage('home');
+  })
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
+
+function sizeToClass(size){
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
+}
+
+function renderItems(items){
+  const bigIconTypes = ['service','for-sale','for-rent'];
+
+  items.forEach(i => {
+    const page = String(i.page || 'home').toLowerCase().trim();
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
+
+    const type = String(i.type || 'card').toLowerCase().trim();
+    const isBig = bigIconTypes.includes(type);
+    const iconClass = isBig ? 'icon icon-big' : 'icon';
+
+    let el = document.createElement('div');
+
+    if (type === 'section-title') {
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    } else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.innerHTML = `
+        ${i.iconUrl ? `<img class="${iconClass}" src="${i.iconUrl}" alt="">` : ``}
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+
+    container.appendChild(el);
+  });
+}
+
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+}
+</script>
+
+</body>
+</html>
