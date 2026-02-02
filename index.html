@@ -1,128 +1,238 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PropWorks</title>
+  <meta charset="utf-8">
+  <title>PropWorks Thailand</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-:root {
-  --max-width: 1400px;
-  --gap: 16px;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #ffffff;
-}
+  <style>
+    :root{
+      --bg:#002C66;
+      --card:#03459D;
+      --txt:#fff;
+      --border:1px solid rgba(255,255,255,.15);
+      --r:20px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Kanit',sans-serif;
+      background:var(--bg);
+      color:var(--txt);
+      padding-top:70px;
+    }
 
-/* ===== NAV (baseline เดียวกับ Contact) ===== */
-nav {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-}
+    nav{
+      position:fixed;top:0;left:0;right:0;height:60px;
+      background:rgba(3,69,157,.85);
+      display:flex;align-items:center;justify-content:center;
+      backdrop-filter:blur(12px);
+      z-index:1000;
+    }
+    .nav{
+      width:100%;max-width:1200px;
+      display:flex;justify-content:space-between;
+      padding:0 20px;
+    }
+    .menu{display:flex;gap:20px}
+    .menu div{cursor:pointer}
 
-nav .menu {
-  display: flex;
-  gap: 20px;
-}
+    main.page-section{
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+      display:none;
+      grid-template-columns:repeat(4,1fr);
+      gap:32px;
+    }
+    main.page-section.active{display:grid}
 
-nav a {
-  text-decoration: none;
-  color: #000;
-  font-weight: 600;
-}
+    .card{
+      background:var(--card);
+      border:var(--border);
+      border-radius:var(--r);
+      padding:24px;
+      min-height:200px;
+      position:relative;
+    }
 
-/* ===== PAGE ===== */
-.page {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 24px;
-}
+    .icon{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      margin-bottom:16px;
+    }
 
-/* ===== GRID ===== */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--gap);
-}
+    .card[data-type="service"] .icon,
+    .card[data-type="for-sale"] .icon,
+    .card[data-type="for-rent"] .icon{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-radius:12px;
+      margin-bottom:20px;
+    }
 
-/* ===== CARD ===== */
-.card {
-  background: #f3f3f3;
-  border-radius: 16px;
-  overflow: hidden;
-}
+    .section-title h2{
+      font-size:28px;
+      font-weight:500;
+    }
 
-.card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+    @media (min-width:900px){
+      .span-full{grid-column:1 / -1}
+      .span-2x2{grid-column:span 2; grid-row:span 2}
+      .span-2x1{grid-column:span 2}
+      .span-1x2{grid-row:span 2}
+    }
+    @media(max-width:900px){
+      main.page-section{grid-template-columns:1fr}
+      .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
+    }
 
-/* sizes */
-.x1y1 { grid-column: span 1; grid-row: span 1; height: 200px; }
-.x2y1 { grid-column: span 2; grid-row: span 1; height: 200px; }
-.x1y2 { grid-column: span 1; grid-row: span 2; height: 420px; }
-.x2y2 { grid-column: span 2; grid-row: span 2; height: 420px; }
-.full { grid-column: 1 / -1; height: 260px; }
+    .card[data-type="for-sale"]::after{
+      content:"For Sale";
+      position:absolute;
+      top:16px;
+      right:16px;
+      background:red;
+      color:#fff;
+      padding:6px 14px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:12px;
+    }
+    .card[data-type="for-rent"]::after{
+      content:"For Rent";
+      position:absolute;
+      top:16px;
+      right:16px;
+      background:#00FF00;
+      color:#008000;
+      padding:6px 14px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:12px;
+    }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .grid { grid-template-columns: 1fr; }
-}
-</style>
+    #loader{
+      position:fixed;inset:0;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    body.loaded #loader{display:none}
+  </style>
 </head>
 
 <body>
 
+<div id="loader">Loading…</div>
+
 <nav>
-  <strong>PropWorks</strong>
-  <div class="menu">
-    <a href="#home">Home</a>
-    <a href="#services">Services</a>
-    <a href="#contact">Contact</a>
+  <div class="nav">
+    <div>PropWorks</div>
+    <div class="menu">
+      <div onclick="switchPage('home')">Home</div>
+      <div onclick="switchPage('services')">Services</div>
+      <div onclick="switchPage('listings')">Listings</div>
+      <div onclick="switchPage('close-a-deal')">Close a Deal</div>
+      <div onclick="switchPage('about')">About</div>
+      <div onclick="switchPage('contact')">Contact</div>
+    </div>
   </div>
 </nav>
 
-<!-- ===== HOME (FIXED) ===== -->
-<section id="home" class="page">
-  <div class="grid">
-    <div class="card x2y1">
-      <img src="https://picsum.photos/800/400?1">
-    </div>
-    <div class="card x1y1">
-      <img src="https://picsum.photos/400/400?2">
-    </div>
-    <div class="card x1y1">
-      <img src="https://picsum.photos/400/400?3">
-    </div>
-    <div class="card full">
-      <img src="https://picsum.photos/1400/500?4">
-    </div>
-  </div>
-</section>
+<main id="home-page" class="page-section"></main>
+<main id="services-page" class="page-section"></main>
+<main id="listings-page" class="page-section"></main>
+<main id="close-a-deal-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
+<main id="contact-page" class="page-section"></main>
 
-<!-- ===== CONTACT (REFERENCE) ===== -->
-<section id="contact" class="page">
-  <div class="grid">
-    <div class="card x1y1"><img src="https://picsum.photos/400/400?5"></div>
-    <div class="card x2y1"><img src="https://picsum.photos/800/400?6"></div>
-    <div class="card x1y2"><img src="https://picsum.photos/400/800?7"></div>
-    <div class="card x2y2"><img src="https://picsum.photos/800/800?8"></div>
-  </div>
-</section>
+<script>
+const API =
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
+    renderItems(data.items || []);
+    switchPage('home');
+  })
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
+
+function sizeToClass(size){
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
+}
+
+function renderItems(items){
+  items.forEach(i => {
+    const page = String(i.page || 'home').toLowerCase().trim();
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
+
+    const type = String(i.type || 'card').toLowerCase().trim();
+    let el = document.createElement('div');
+
+    const icon = i.iconUrl || i.iconURL || i.IconURL || '';
+    const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
+
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
+    }
+    else if (type === 'section-title') {
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+    else if (type === 'text-block') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
+    }
+    else if (type === 'review') {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
+      el.innerHTML = `<p>${i.subtitle || ''}</p><h3>${i.title}</h3>`;
+    }
+    else if (type === 'contact') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    }
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
+      el.innerHTML = `${iconHTML}<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    }
+
+    container.appendChild(el);
+  });
+}
+
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+}
+</script>
 
 </body>
 </html>
