@@ -1,169 +1,145 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <title>PropWorks Thailand</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>PropWorks Thailand</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#002C66;
-      --card:#03459D;
-      --txt:#fff;
-      --border:1px solid rgba(255,255,255,.15);
-      --r:20px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Kanit',sans-serif;
-      background:var(--bg);
-      color:var(--txt);
-      padding-top:70px;
-    }
+<style>
+:root{
+  --bg:#002C66;
+  --card:#03459D;
+  --txt:#fff;
+  --border:1px solid rgba(255,255,255,.15);
+  --r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Kanit',sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  padding-top:70px;
+}
 
-    nav{
-      position:fixed;top:0;left:0;right:0;height:60px;
-      background:rgba(3,69,157,.85);
-      display:flex;align-items:center;justify-content:center;
-      backdrop-filter:blur(12px);
-      z-index:1000;
-    }
-    .nav{
-      width:100%;max-width:1200px;
-      display:flex;justify-content:space-between;
-      align-items:center;
-      padding:0 20px;
-    }
+/* ===== NAV ===== */
+nav{
+  position:fixed;top:0;left:0;right:0;height:60px;
+  background:rgba(3,69,157,.85);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(12px);
+  z-index:1000;
+}
+.nav{
+  width:100%;max-width:1200px;
+  display:flex;justify-content:space-between;
+  align-items:center;
+  padding:0 20px;
+}
+.menu{display:flex;gap:20px}
+.menu div{cursor:pointer}
+.hamburger{font-size:28px;cursor:pointer;display:none}
 
-    /* ===== MENU ===== */
-    .menu{display:flex;gap:20px}
-    .menu div{cursor:pointer}
+/* ===== PAGE ===== */
+main.page-section{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+  display:none;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:minmax(160px, auto);
+  gap:32px;
+}
+main.page-section.active{display:grid}
 
-    .hamburger{
-      font-size:28px;
-      cursor:pointer;
-      display:none;
-    }
+.card{
+  background:var(--card);
+  border:var(--border);
+  border-radius:var(--r);
+  padding:24px;
+  position:relative;
+}
 
-    /* ===== PAGE ===== */
-    main.page-section{
-      max-width:1200px;
-      margin:auto;
-      padding:20px;
-      display:none;
-      grid-template-columns:repeat(4,1fr);
-      grid-auto-rows:minmax(160px, auto);
-      gap:32px;
-    }
-    main.page-section.active{display:grid}
+/* === ICON (BASELINE FIX) === */
+.icon{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+  margin-bottom:16px;
+}
 
-    .card{
-      background:var(--card);
-      border:var(--border);
-      border-radius:var(--r);
-      padding:24px;
-    }
+/* service-like cards */
+.card[data-type="service"] .icon,
+.card[data-type="for-sale"] .icon,
+.card[data-type="for-rent"] .icon{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:20px;
+}
 
-    .icon{
-      width:48px;
-      height:48px;
-      object-fit:contain;
-      margin-bottom:16px;
-    }
+/* hero / hero-banner icon FIX */
+.card[data-type="hero"] .icon,
+.card[data-type="hero-banner"] .icon{
+  width:64px;
+  height:64px;
+  margin-bottom:16px;
+}
 
-    .card[data-type="service"] .icon,
-    .card[data-type="for-sale"] .icon,
-    .card[data-type="for-rent"] .icon{
-      width:100%;
-      height:180px;
-      object-fit:cover;
-      border-radius:12px;
-      margin-bottom:20px;
-    }
+/* ===== GRID ===== */
+@media (min-width:900px){
+  .span-full{grid-column:1 / -1}
+  .span-2x2{grid-column:span 2; grid-row:span 2}
+  .span-2x1{grid-column:span 2}
+  .span-1x2{grid-row:span 2}
+}
 
-    .section-title h2{
-      font-size:28px;
-      font-weight:500;
-    }
+/* ===== MOBILE ===== */
+@media (max-width:900px){
+  .menu{display:none}
+  .hamburger{display:block}
+  main.page-section{grid-template-columns:1fr}
+  .span-full,.span-2x1,.span-1x2,.span-2x2{
+    grid-column:1;grid-row:auto;
+  }
+}
 
-    /* ===== DESKTOP GRID ===== */
-    @media (min-width:900px){
-      .span-full{grid-column:1 / -1}
-      .span-2x2{grid-column:span 2; grid-row:span 2}
-      .span-2x1{grid-column:span 2}
-      .span-1x2{grid-row:span 2}
-    }
-
-    /* ===== MOBILE ===== */
-    @media (max-width:900px){
-      .menu{display:none}
-      .hamburger{display:block}
-
-      main.page-section{
-        grid-template-columns:1fr;
-        grid-auto-rows:minmax(160px, auto);
-      }
-      .span-full,
-      .span-2x1,
-      .span-1x2,
-      .span-2x2{
-        grid-column:1;
-        grid-row:auto;
-      }
-    }
-
-    /* ===== MOBILE MENU OVERLAY ===== */
-    .mobile-menu{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.6);
-      backdrop-filter:blur(10px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:3000;
-    }
-    .mobile-menu.active{display:flex}
-
-    .mobile-menu-inner{
-      background:#002C66;
-      width:90%;
-      max-width:360px;
-      border-radius:24px;
-      padding:32px;
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-      text-align:center;
-      font-size:20px;
-    }
-    .mobile-menu-inner div{cursor:pointer}
-
-    /* ===== LOADER ===== */
-    #loader{
-      position:fixed;inset:0;
-      background:#000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-    }
-    body.loaded #loader{display:none}
-  </style>
+/* ===== MOBILE MENU ===== */
+.mobile-menu{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+}
+.mobile-menu.active{display:flex}
+.mobile-menu-inner{
+  background:#002C66;
+  width:90%;
+  max-width:360px;
+  border-radius:24px;
+  padding:32px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  text-align:center;
+  font-size:20px;
+}
+.mobile-menu-inner div{cursor:pointer}
+</style>
 </head>
 
 <body>
 
-<div id="loader">Loading…</div>
-
 <nav>
   <div class="nav">
     <div>PropWorks</div>
-
     <div class="menu">
       <div onclick="switchPage('home')">Home</div>
       <div onclick="switchPage('services')">Services</div>
@@ -172,12 +148,10 @@
       <div onclick="switchPage('about')">About</div>
       <div onclick="switchPage('contact')">Contact</div>
     </div>
-
     <div class="hamburger" onclick="toggleMobileMenu()">☰</div>
   </div>
 </nav>
 
-<!-- MOBILE MENU -->
 <div id="mobile-menu" class="mobile-menu" onclick="closeMobileMenu(event)">
   <div class="mobile-menu-inner">
     <div onclick="goMobile('home')">Home</div>
@@ -197,90 +171,71 @@
 <main id="contact-page" class="page-section"></main>
 
 <script>
-const API =
-  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+const API='https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
-fetch(API)
-  .then(r => r.json())
-  .then(data => {
-    renderItems(data.items || []);
-    switchPage('home');
-  })
-  .finally(() => {
-    document.body.classList.add('loaded');
-  });
+fetch(API).then(r=>r.json()).then(d=>{
+  renderItems(d.items||[]);
+  switchPage('home');
+});
 
 function sizeToClass(size){
-  const s = String(size || '').toLowerCase().trim();
-  if (s === 'full') return 'span-full';
-  if (s === '2x2') return 'span-2x2';
-  if (s === '2x1') return 'span-2x1';
-  if (s === '1x2') return 'span-1x2';
-  return '';
+  const s=String(size||'').toLowerCase().trim();
+  if(s==='full')return'span-full';
+  if(s==='2x2')return'span-2x2';
+  if(s==='2x1')return'span-2x1';
+  if(s==='1x2')return'span-1x2';
+  return'';
 }
 
 function renderItems(items){
-  items.forEach(i => {
-    const page = String(i.page || 'home').toLowerCase().trim();
-    const container = document.getElementById(`${page}-page`);
-    if (!container) return;
+  items.forEach(i=>{
+    const page=i.page;
+    const c=document.getElementById(`${page}-page`);
+    if(!c)return;
 
-    const type = String(i.type || 'card').toLowerCase().trim();
-    let el = document.createElement('div');
+    const type=String(i.type||'').toLowerCase();
+    const icon=i.iconUrl||i.iconURL||i.IconURL||'';
 
-    const icon = i.iconUrl || i.iconURL || i.IconURL || '';
-    const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
+    let el=document.createElement('div');
+    el.className=`card ${sizeToClass(i.size)}`;
+    el.dataset.type=type;
 
-    if (type === 'hero' || type === 'hero-banner') {
-      el.className = 'card span-full';
-      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
-    }
-    else if (type === 'section-title') {
-      el.className = 'span-full section-title';
-      el.innerHTML = `<h2>${i.title}</h2>`;
-    }
-    else {
-      el.className = `card ${sizeToClass(i.size)}`;
-      el.dataset.type = type;
+    /* FIX: Icon render for ALL types (incl hero / mobile) */
+    const iconHTML = icon ? `<img class="icon" src="${icon}" onerror="this.style.display='none'">` : '';
+
+    if(type==='hero' || type==='hero-banner'){
+      el.classList.add('span-full');
+      el.innerHTML = `
+        ${iconHTML}
+        <h1>${i.title}</h1>
+        <p>${i.subtitle||''}</p>
+      `;
+    }else{
       el.innerHTML = `
         ${iconHTML}
         <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
+        <p>${i.subtitle||''}</p>
       `;
     }
-    container.appendChild(el);
+    c.appendChild(el);
   });
 }
 
-function switchPage(page){
-  document.querySelectorAll('.page-section')
-    .forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(`${page}-page`);
-  if (target) {
-    target.classList.add('active');
-    window.scrollTo(0,0);
-  }
+function switchPage(p){
+  document.querySelectorAll('.page-section').forEach(x=>x.classList.remove('active'));
+  document.getElementById(`${p}-page`)?.classList.add('active');
+  window.scrollTo(0,0);
 }
 
-/* ===== MOBILE MENU LOGIC ===== */
 function toggleMobileMenu(){
-  const m = document.getElementById('mobile-menu');
-  m.classList.toggle('active');
-  document.body.style.overflow =
-    m.classList.contains('active') ? 'hidden' : '';
+  document.getElementById('mobile-menu').classList.toggle('active');
 }
-
 function closeMobileMenu(e){
-  if(e.target.id === 'mobile-menu'){
-    toggleMobileMenu();
-  }
+  if(e.target.id==='mobile-menu')toggleMobileMenu();
 }
-
-function goMobile(page){
-  toggleMobileMenu();
-  switchPage(page);
+function goMobile(p){
+  toggleMobileMenu();switchPage(p);
 }
 </script>
-
 </body>
 </html>
