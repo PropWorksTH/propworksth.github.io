@@ -221,8 +221,8 @@ function renderItems(items){
     const type = String(i.type || 'card').toLowerCase().trim();
     let el = document.createElement('div');
 
-    /* FIX: ใช้ IconURL จาก GSheet เท่านั้น */
-    const icon = i.IconURL || '';
+    /* FIX (only): enforce IconURL from GSheet */
+    const icon = i.IconURL || i.iconURL || i.iconUrl || '';
     const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
 
     if (type === 'hero' || type === 'hero-banner') {
