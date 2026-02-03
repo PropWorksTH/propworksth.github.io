@@ -1,0 +1,3 @@
+This site is pure static HTML.
+.nojekyll is intentional.
+Do not change Pages source without reason.
