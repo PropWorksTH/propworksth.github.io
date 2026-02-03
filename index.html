@@ -1,164 +1,127 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<title>PropWorks Thailand</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <title>PropWorks Thailand</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --bg:#002C66;
-  --card:#03459D;
-  --txt:#fff;
-  --border:1px solid rgba(255,255,255,.15);
-  --r:20px;
-  --active:#ffffff;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Kanit',sans-serif;
-  background:var(--bg);
-  color:var(--txt);
-  padding-top:70px;
-}
+  <style>
+    :root{
+      --bg:#002C66;
+      --card:#03459D;
+      --txt:#fff;
+      --border:1px solid rgba(255,255,255,.15);
+      --r:20px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Kanit',sans-serif;
+      background:var(--bg);
+      color:var(--txt);
+      padding-top:70px;
+    }
 
-/* ===== NAV ===== */
-nav{
-  position:fixed;top:0;left:0;right:0;height:60px;
-  background:rgba(3,69,157,.85);
-  display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(12px);
-  z-index:1000;
-}
-.nav{
-  width:100%;max-width:1200px;
-  display:flex;justify-content:space-between;
-  padding:0 20px;
-}
-.menu{display:flex;gap:20px}
-.menu div{cursor:pointer}
+    nav{
+      position:fixed;top:0;left:0;right:0;height:60px;
+      background:rgba(3,69,157,.85);
+      display:flex;align-items:center;justify-content:center;
+      backdrop-filter:blur(12px);
+      z-index:1000;
+    }
+    .nav{
+      width:100%;max-width:1200px;
+      display:flex;justify-content:space-between;
+      padding:0 20px;
+    }
+    .menu{display:flex;gap:20px}
+    .menu div{cursor:pointer}
 
-/* ===== PAGE GRID ===== */
-main.page-section{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-  display:none;
-  grid-template-columns:repeat(4,1fr);
-  grid-auto-rows:minmax(160px, auto);
-  gap:32px;
-}
-main.page-section.active{display:grid}
+    main.page-section{
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+      display:none;
+      grid-template-columns:repeat(4,1fr);
+      grid-auto-rows:minmax(160px, auto);
+      gap:32px;
+    }
+    main.page-section.active{display:grid}
 
-.card{
-  background:var(--card);
-  border:var(--border);
-  border-radius:var(--r);
-  padding:24px;
-}
+    .card{
+      background:var(--card);
+      border:var(--border);
+      border-radius:var(--r);
+      padding:24px;
+    }
 
-/* ===== ICON ===== */
-.icon{
-  width:48px;
-  height:48px;
-  object-fit:contain;
-  margin-bottom:16px;
-}
+    .icon{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      margin-bottom:16px;
+    }
 
-.card[data-type="service"] .icon,
-.card[data-type="for-sale"] .icon,
-.card[data-type="for-rent"] .icon{
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  border-radius:12px;
-  margin-bottom:20px;
-}
+    .card[data-type="service"] .icon,
+    .card[data-type="for-sale"] .icon,
+    .card[data-type="for-rent"] .icon{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-radius:12px;
+      margin-bottom:20px;
+    }
 
-.card[data-type="hero"] .icon,
-.card[data-type="hero-banner"] .icon{
-  width:100%;
-  height:220px;
-  object-fit:cover;
-  border-radius:14px;
-  margin-bottom:24px;
-}
+    .section-title h2{
+      font-size:28px;
+      font-weight:500;
+    }
 
-/* ===== DESKTOP GRID ===== */
-@media (min-width:900px){
-  .span-full{grid-column:1 / -1}
-  .span-2x2{grid-column:span 2; grid-row:span 2}
-  .span-2x1{grid-column:span 2}
-  .span-1x2{grid-row:span 2}
-}
+    /* ===== DESKTOP GRID ===== */
+    @media (min-width:900px){
+      .span-full{grid-column:1 / -1}
+      .span-2x2{grid-column:span 2; grid-row:span 2}
+      .span-2x1{grid-column:span 2}
+      .span-1x2{grid-row:span 2}
+    }
 
-/* ===== MOBILE GRID ===== */
-@media (max-width:900px){
-  main.page-section{
-    grid-template-columns:1fr;
-  }
-  .span-full,
-  .span-2x1,
-  .span-1x2,
-  .span-2x2{
-    grid-column:1;
-  }
-}
+    /* ===== MOBILE GRID FIX ===== */
+    @media (max-width:900px){
+      main.page-section{
+        grid-template-columns:1fr;
+        grid-auto-rows:minmax(160px, auto);
+      }
 
-/* ===== MOBILE MENU (FIXED, Original-like) ===== */
-@media (max-width:900px){
-  body{padding-bottom:70px}
+      .span-full{grid-column:1}
+      .span-2x1{grid-column:1}
+      .span-1x2{grid-column:1; grid-row:span 2}
+      .span-2x2{grid-column:1; grid-row:span 2}
 
-  nav{
-    top:auto;
-    bottom:0;
-    height:64px;
-  }
+      /* ===== FIX: HERO / HERO-BANNER ICON (MOBILE ONLY) ===== */
+      .card[data-type="hero"] .icon,
+      .card[data-type="hero-banner"] .icon{
+        display:block;
+        width:100%;
+        height:220px;
+        object-fit:cover;
+        border-radius:12px;
+        margin-bottom:20px;
+      }
+    }
 
-  .nav{
-    max-width:none;
-    padding:0;
-  }
-
-  .menu{
-    width:100%;
-    display:flex;
-    overflow-x:auto;
-    gap:0;
-    scrollbar-width:none;
-  }
-  .menu::-webkit-scrollbar{display:none}
-
-  .menu div{
-    flex:0 0 auto;
-    min-width:72px;
-    padding:8px 10px;
-    font-size:12px;
-    text-align:center;
-    opacity:.55;
-    white-space:nowrap;
-  }
-  .menu div.active{
-    opacity:1;
-    font-weight:500;
-    border-top:2px solid var(--active);
-  }
-}
-
-#loader{
-  position:fixed;inset:0;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-body.loaded #loader{display:none}
-</style>
+    #loader{
+      position:fixed;inset:0;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    body.loaded #loader{display:none}
+  </style>
 </head>
 
 <body>
@@ -188,65 +151,73 @@ body.loaded #loader{display:none}
 
 <script>
 const API =
-'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
+  'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
 fetch(API)
-.then(r=>r.json())
-.then(d=>{
-  renderItems(d.items||[]);
-  switchPage('home');
-})
-.finally(()=>document.body.classList.add('loaded'));
+  .then(r => r.json())
+  .then(data => {
+    renderItems(data.items || []);
+    switchPage('home');
+  })
+  .finally(() => {
+    document.body.classList.add('loaded');
+  });
 
 function sizeToClass(size){
-  const s=String(size||'').toLowerCase().trim();
-  if(s==='full')return'span-full';
-  if(s==='2x2')return'span-2x2';
-  if(s==='2x1')return'span-2x1';
-  if(s==='1x2')return'span-1x2';
-  return'';
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
 }
 
 function renderItems(items){
-  items.forEach(i=>{
-    const page=String(i.page||'home').toLowerCase().trim();
-    const c=document.getElementById(`${page}-page`);
-    if(!c)return;
+  items.forEach(i => {
+    const page = String(i.page || 'home').toLowerCase().trim();
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
 
-    const type=String(i.type||'card').toLowerCase().trim();
-    const el=document.createElement('div');
-    const icon=i.iconUrl||i.iconURL||i.IconURL||'';
-    const img=icon?`<img class="icon" src="${icon}">`:``;
+    const type = String(i.type || 'card').toLowerCase().trim();
+    let el = document.createElement('div');
 
-    if(type==='hero'||type==='hero-banner'){
-      el.className='card span-full';
-      el.dataset.type=type;
-      el.innerHTML=`${img}<h1>${i.title||''}</h1><p>${i.subtitle||''}</p>`;
-    }else if(type==='section-title'){
-      el.className='span-full';
-      el.innerHTML=`<h2>${i.title||''}</h2>`;
-    }else{
-      el.className=`card ${sizeToClass(i.size)}`;
-      el.dataset.type=type;
-      el.innerHTML=`${img}<h3>${i.title||''}</h3><p>${i.subtitle||''}</p>`;
+    const icon = i.iconUrl || i.iconURL || i.IconURL || '';
+    const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
+
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `
+        ${iconHTML}
+        <h1>${i.title}</h1>
+        <p>${i.subtitle || ''}</p>
+      `;
     }
-    c.appendChild(el);
+    else if (type === 'section-title') {
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
+      el.innerHTML = `
+        ${iconHTML}
+        <h3>${i.title}</h3>
+        <p>${i.subtitle || ''}</p>
+      `;
+    }
+    container.appendChild(el);
   });
 }
 
 function switchPage(page){
   document.querySelectorAll('.page-section')
-    .forEach(p=>p.classList.remove('active'));
-  document.getElementById(`${page}-page`)?.classList.add('active');
-
-  document.querySelectorAll('.menu div')
-    .forEach(m=>m.classList.remove('active'));
-
-  const map={home:0,services:1,listings:2,'close-a-deal':3,about:4,contact:5};
-  const i=map[page];
-  if(i!==undefined)document.querySelectorAll('.menu div')[i]?.classList.add('active');
-
-  window.scrollTo(0,0);
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
 }
 </script>
 
