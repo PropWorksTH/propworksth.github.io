@@ -35,10 +35,23 @@
     .nav{
       width:100%;max-width:1200px;
       display:flex;justify-content:space-between;
+      align-items:center;
       padding:0 20px;
+      position:relative;
     }
-    .menu{display:flex;gap:20px}
+
+    .menu{
+      display:flex;
+      gap:20px;
+    }
     .menu div{cursor:pointer}
+
+    /* hamburger */
+    .menu-toggle{
+      display:none;
+      font-size:28px;
+      cursor:pointer;
+    }
 
     main.page-section{
       max-width:1200px;
@@ -88,7 +101,7 @@
       .span-1x2{grid-row:span 2}
     }
 
-    /* ===== MOBILE GRID FIX ===== */
+    /* ===== MOBILE ===== */
     @media (max-width:900px){
       main.page-section{
         grid-template-columns:1fr;
@@ -99,6 +112,24 @@
       .span-2x1{grid-column:1}
       .span-1x2{grid-column:1; grid-row:span 2}
       .span-2x2{grid-column:1; grid-row:span 2}
+
+      /* mobile menu */
+      .menu{
+        position:absolute;
+        top:60px;
+        left:0;
+        right:0;
+        background:rgba(3,69,157,.95);
+        flex-direction:column;
+        gap:0;
+        display:none;
+      }
+      .menu div{
+        padding:16px 20px;
+        border-bottom:1px solid rgba(255,255,255,.15);
+      }
+      .menu.show{display:flex}
+      .menu-toggle{display:block}
     }
 
     #loader{
@@ -120,6 +151,7 @@
 <nav>
   <div class="nav">
     <div>PropWorks</div>
+
     <div class="menu">
       <div onclick="switchPage('home')">Home</div>
       <div onclick="switchPage('services')">Services</div>
@@ -128,6 +160,8 @@
       <div onclick="switchPage('about')">About</div>
       <div onclick="switchPage('contact')">Contact</div>
     </div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   </div>
 </nav>
 
@@ -202,6 +236,12 @@ function switchPage(page){
     target.classList.add('active');
     window.scrollTo(0,0);
   }
+  const m = document.querySelector('.menu');
+  if (m) m.classList.remove('show');
+}
+
+function toggleMenu(){
+  document.querySelector('.menu').classList.toggle('show');
 }
 </script>
 
