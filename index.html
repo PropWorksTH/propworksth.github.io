@@ -37,22 +37,19 @@
       display:flex;justify-content:space-between;
       align-items:center;
       padding:0 20px;
-      position:relative;
     }
 
-    .menu{
-      display:flex;
-      gap:20px;
-    }
+    /* ===== MENU ===== */
+    .menu{display:flex;gap:20px}
     .menu div{cursor:pointer}
 
-    /* hamburger */
-    .menu-toggle{
-      display:none;
+    .hamburger{
       font-size:28px;
       cursor:pointer;
+      display:none;
     }
 
+    /* ===== PAGE ===== */
     main.page-section{
       max-width:1200px;
       margin:auto;
@@ -103,35 +100,50 @@
 
     /* ===== MOBILE ===== */
     @media (max-width:900px){
+      .menu{display:none}
+      .hamburger{display:block}
+
       main.page-section{
         grid-template-columns:1fr;
         grid-auto-rows:minmax(160px, auto);
       }
-
-      .span-full{grid-column:1}
-      .span-2x1{grid-column:1}
-      .span-1x2{grid-column:1; grid-row:span 2}
-      .span-2x2{grid-column:1; grid-row:span 2}
-
-      /* mobile menu */
-      .menu{
-        position:absolute;
-        top:60px;
-        left:0;
-        right:0;
-        background:rgba(3,69,157,.95);
-        flex-direction:column;
-        gap:0;
-        display:none;
+      .span-full,
+      .span-2x1,
+      .span-1x2,
+      .span-2x2{
+        grid-column:1;
+        grid-row:auto;
       }
-      .menu div{
-        padding:16px 20px;
-        border-bottom:1px solid rgba(255,255,255,.15);
-      }
-      .menu.show{display:flex}
-      .menu-toggle{display:block}
     }
 
+    /* ===== MOBILE MENU OVERLAY ===== */
+    .mobile-menu{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.6);
+      backdrop-filter:blur(10px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:3000;
+    }
+    .mobile-menu.active{display:flex}
+
+    .mobile-menu-inner{
+      background:#002C66;
+      width:90%;
+      max-width:360px;
+      border-radius:24px;
+      padding:32px;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      text-align:center;
+      font-size:20px;
+    }
+    .mobile-menu-inner div{cursor:pointer}
+
+    /* ===== LOADER ===== */
     #loader{
       position:fixed;inset:0;
       background:#000;
@@ -161,9 +173,21 @@
       <div onclick="switchPage('contact')">Contact</div>
     </div>
 
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="hamburger" onclick="toggleMobileMenu()">☰</div>
   </div>
 </nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu" class="mobile-menu" onclick="closeMobileMenu(event)">
+  <div class="mobile-menu-inner">
+    <div onclick="goMobile('home')">Home</div>
+    <div onclick="goMobile('services')">Services</div>
+    <div onclick="goMobile('listings')">Listings</div>
+    <div onclick="goMobile('close-a-deal')">Close a Deal</div>
+    <div onclick="goMobile('about')">About</div>
+    <div onclick="goMobile('contact')">Contact</div>
+  </div>
+</div>
 
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
@@ -236,12 +260,25 @@ function switchPage(page){
     target.classList.add('active');
     window.scrollTo(0,0);
   }
-  const m = document.querySelector('.menu');
-  if (m) m.classList.remove('show');
 }
 
-function toggleMenu(){
-  document.querySelector('.menu').classList.toggle('show');
+/* ===== MOBILE MENU LOGIC ===== */
+function toggleMobileMenu(){
+  const m = document.getElementById('mobile-menu');
+  m.classList.toggle('active');
+  document.body.style.overflow =
+    m.classList.contains('active') ? 'hidden' : '';
+}
+
+function closeMobileMenu(e){
+  if(e.target.id === 'mobile-menu'){
+    toggleMobileMenu();
+  }
+}
+
+function goMobile(page){
+  toggleMobileMenu();
+  switchPage(page);
 }
 </script>
 
