@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <title>PROPWORKS — BASELINE A — TEST</title>
+  <title>PropWorks Thailand</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,6 @@
       --txt:#fff;
       --border:1px solid rgba(255,255,255,.15);
       --r:20px;
-      --max:1200px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -26,7 +25,6 @@
       padding-top:70px;
     }
 
-    /* ===== NAV ===== */
     nav{
       position:fixed;top:0;left:0;right:0;height:60px;
       background:rgba(3,69,157,.85);
@@ -35,16 +33,15 @@
       z-index:1000;
     }
     .nav{
-      width:100%;max-width:var(--max);
+      width:100%;max-width:1200px;
       display:flex;justify-content:space-between;
       padding:0 20px;
     }
     .menu{display:flex;gap:20px}
     .menu div{cursor:pointer}
 
-    /* ===== PAGE / GRID ===== */
     main.page-section{
-      max-width:var(--max);
+      max-width:1200px;
       margin:auto;
       padding:20px;
       display:none;
@@ -53,18 +50,12 @@
     }
     main.page-section.active{display:grid}
 
-    @media(max-width:900px){
-      main.page-section{grid-template-columns:1fr}
-    }
-
-    /* ===== CARD ===== */
     .card{
-      position:relative;
       background:var(--card);
       border:var(--border);
       border-radius:var(--r);
       padding:24px;
-      overflow:hidden;
+      min-height:200px;
     }
 
     .icon{
@@ -74,7 +65,6 @@
       margin-bottom:16px;
     }
 
-    /* service / sale / rent = hero image */
     .card[data-type="service"] .icon,
     .card[data-type="for-sale"] .icon,
     .card[data-type="for-rent"] .icon{
@@ -85,48 +75,37 @@
       margin-bottom:20px;
     }
 
-    @media (min-width:900px){
-      .span-full{grid-column:1 / -1}
-      .span-2x2{grid-column:span 2; grid-row:span 2}
-      .span-2x1{grid-column:span 2}
-      .span-1x2{grid-row:span 2}
-
-      .card.span-2x2[data-type="service"] .icon,
-      .card.span-2x2[data-type="for-sale"] .icon,
-      .card.span-2x2[data-type="for-rent"] .icon{
-        height:380px;
-      }
-      .card.span-2x1[data-type="service"] .icon,
-      .card.span-2x1[data-type="for-sale"] .icon,
-      .card.span-2x1[data-type="for-rent"] .icon{
-        height:220px;
-      }
-    }
-
     .section-title h2{
       font-size:28px;
       font-weight:500;
     }
 
-    /* badge */
-    .card[data-type="for-sale"]::after{
-      content:"For Sale";
-      position:absolute;top:16px;right:16px;
-      background:red;color:#fff;
-      padding:6px 14px;border-radius:999px;
-      font-size:12px;font-weight:600;
+    @media (min-width:900px){
+      .span-full{grid-column:1 / -1}
+      .span-2x2{grid-column:span 2; grid-row:span 2}
+      .span-2x1{grid-column:span 2}
+      .span-1x2{grid-row:span 2}
     }
-    .card[data-type="for-rent"]::after{
-      content:"For Rent";
-      position:absolute;top:16px;right:16px;
-      background:#00ff00;color:#006600;
-      padding:6px 14px;border-radius:999px;
-      font-size:12px;font-weight:600;
+    @media(max-width:900px){
+      main.page-section{grid-template-columns:1fr}
+      .span-full,.span-2x2,.span-2x1,.span-1x2{grid-column:1 / -1}
     }
+
+    #loader{
+      position:fixed;inset:0;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    body.loaded #loader{display:none}
   </style>
 </head>
 
 <body>
+
+<div id="loader">Loading…</div>
 
 <nav>
   <div class="nav">
@@ -135,14 +114,19 @@
       <div onclick="switchPage('home')">Home</div>
       <div onclick="switchPage('services')">Services</div>
       <div onclick="switchPage('listings')">Listings</div>
+      <div onclick="switchPage('close-a-deal')">Close a Deal</div>
+      <div onclick="switchPage('about')">About</div>
       <div onclick="switchPage('contact')">Contact</div>
     </div>
   </div>
 </nav>
 
+<!-- PAGES -->
 <main id="home-page" class="page-section"></main>
 <main id="services-page" class="page-section"></main>
 <main id="listings-page" class="page-section"></main>
+<main id="close-a-deal-page" class="page-section"></main>
+<main id="about-page" class="page-section"></main>
 <main id="contact-page" class="page-section"></main>
 
 <script>
@@ -150,48 +134,78 @@ const API =
   'https://script.google.com/macros/s/AKfycbyT2d_zx3w-pQtEhFXcGRCKIqdkEFYCB5jwGrb5nqXjVg6yR910vchMYvKQF2C1R5JE/exec?page=items';
 
 fetch(API)
-  .then(r=>r.json())
-  .then(d=>{
-    renderItems(d.items||[]);
+  .then(r => r.json())
+  .then(data => {
+    renderItems(data.items || []);
     switchPage('home');
+  })
+  .finally(() => {
+    document.body.classList.add('loaded');
   });
 
-function sizeToClass(s){
-  s=String(s||'').toLowerCase().trim();
-  if(s==='full')return'span-full';
-  if(s==='2x2')return'span-2x2';
-  if(s==='2x1')return'span-2x1';
-  if(s==='1x2')return'span-1x2';
-  return'';
+function sizeToClass(size){
+  const s = String(size || '').toLowerCase().trim();
+  if (s === 'full') return 'span-full';
+  if (s === '2x2') return 'span-2x2';
+  if (s === '2x1') return 'span-2x1';
+  if (s === '1x2') return 'span-1x2';
+  return '';
 }
 
 function renderItems(items){
-  items.forEach(i=>{
-    const page=String(i.page||'home').toLowerCase().trim();
-    const c=document.getElementById(`${page}-page`);
-    if(!c)return;
+  items.forEach(i => {
+    const page = String(i.page || 'home').toLowerCase().trim();
+    const container = document.getElementById(`${page}-page`);
+    if (!container) return;
 
-    const type=String(i.type||'card').toLowerCase().trim();
-    const el=document.createElement('div');
-    const icon=i.iconUrl||i.iconURL||i.IconURL||'';
-    const iconHTML=icon?`<img class="icon" src="${icon}">`:'';
+    const type = String(i.type || 'card').toLowerCase().trim();
+    let el = document.createElement('div');
 
-    if(type==='section-title'){
-      el.className='span-full section-title';
-      el.innerHTML=`<h2>${i.title}</h2>`;
-    }else{
-      el.className=`card ${sizeToClass(i.size)}`;
-      el.dataset.type=type;
-      el.innerHTML=`${iconHTML}<h3>${i.title}</h3><p>${i.subtitle||''}</p>`;
+    const icon = i.iconUrl || i.iconURL || i.IconURL || '';
+    const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
+
+    if (type === 'hero' || type === 'hero-banner') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
     }
-    c.appendChild(el);
+    else if (type === 'section-title') {
+      el.className = 'span-full section-title';
+      el.innerHTML = `<h2>${i.title}</h2>`;
+    }
+    else if (type === 'text-block') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `<p>${i.subtitle || i.title || ''}</p>`;
+    }
+    else if (type === 'review') {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
+      el.innerHTML = `<p>${i.subtitle || ''}</p><h3>${i.title}</h3>`;
+    }
+    else if (type === 'contact') {
+      el.className = 'card span-full';
+      el.dataset.type = type;
+      el.innerHTML = `<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    }
+    else {
+      el.className = `card ${sizeToClass(i.size)}`;
+      el.dataset.type = type;
+      el.innerHTML = `${iconHTML}<h3>${i.title}</h3><p>${i.subtitle || ''}</p>`;
+    }
+
+    container.appendChild(el);
   });
 }
 
-function switchPage(p){
-  document.querySelectorAll('.page-section').forEach(x=>x.classList.remove('active'));
-  const t=document.getElementById(`${p}-page`);
-  if(t){t.classList.add('active');window.scrollTo(0,0);}
+function switchPage(page){
+  document.querySelectorAll('.page-section')
+    .forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`${page}-page`);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0,0);
+  }
 }
 </script>
 
