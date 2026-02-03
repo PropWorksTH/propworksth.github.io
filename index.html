@@ -39,6 +39,7 @@
       padding:0 20px;
     }
 
+    /* ===== MENU ===== */
     .menu{display:flex;gap:20px}
     .menu div{cursor:pointer}
 
@@ -48,6 +49,7 @@
       display:none;
     }
 
+    /* ===== PAGE ===== */
     main.page-section{
       max-width:1200px;
       margin:auto;
@@ -88,6 +90,7 @@
       font-weight:500;
     }
 
+    /* ===== DESKTOP GRID ===== */
     @media (min-width:900px){
       .span-full{grid-column:1 / -1}
       .span-2x2{grid-column:span 2; grid-row:span 2}
@@ -95,6 +98,7 @@
       .span-1x2{grid-row:span 2}
     }
 
+    /* ===== MOBILE ===== */
     @media (max-width:900px){
       .menu{display:none}
       .hamburger{display:block}
@@ -112,6 +116,7 @@
       }
     }
 
+    /* ===== MOBILE MENU OVERLAY ===== */
     .mobile-menu{
       position:fixed;
       inset:0;
@@ -138,6 +143,7 @@
     }
     .mobile-menu-inner div{cursor:pointer}
 
+    /* ===== LOADER ===== */
     #loader{
       position:fixed;inset:0;
       background:#000;
@@ -171,6 +177,7 @@
   </div>
 </nav>
 
+<!-- MOBILE MENU -->
 <div id="mobile-menu" class="mobile-menu" onclick="closeMobileMenu(event)">
   <div class="mobile-menu-inner">
     <div onclick="goMobile('home')">Home</div>
@@ -221,8 +228,7 @@ function renderItems(items){
     const type = String(i.type || 'card').toLowerCase().trim();
     let el = document.createElement('div');
 
-    /* FIX (only): enforce IconURL from GSheet */
-    const icon = i.IconURL || i.iconURL || i.iconUrl || '';
+    const icon = i.iconUrl || i.iconURL || i.IconURL || '';
     const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
 
     if (type === 'hero' || type === 'hero-banner') {
@@ -256,6 +262,7 @@ function switchPage(page){
   }
 }
 
+/* ===== MOBILE MENU LOGIC ===== */
 function toggleMobileMenu(){
   const m = document.getElementById('mobile-menu');
   m.classList.toggle('active');
