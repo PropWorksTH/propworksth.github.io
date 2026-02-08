@@ -237,8 +237,10 @@ function sizeToClass(size){
 function renderItems(items){
   items.forEach(i => {
     
-     // ✅ กัน logo ออกตั้งแต่ต้น
-    if (String(i.type || '').toLowerCase().trim() === 'logo') return;
+    const type = String(i.type || '').toLowerCase().trim();
+
+    // 🔒 กัน logo ออกจาก grid แบบเด็ดขาด
+    if (type === 'logo') return;
           
     const page = String(i.page || 'home').toLowerCase().trim();
     const container = document.getElementById(`${page}-page`);
