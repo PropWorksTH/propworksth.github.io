@@ -174,36 +174,6 @@
       z-index:9999;
     }
     body.loaded #loader{display:none}
-  
-  /* === STEP 3: clickable card UX === */
-  .card[href]{
-   cursor:pointer;
-   transition:transform .2s ease, box-shadow .2s ease;
-  }
-  .card[href]:hover{
-   transform:translateY(-2px);
-   box-shadow:0 12px 28px rgba(0,0,0,.25);
-  }
-
-  /* STEP 3 — Demo Hover (ก้อนเดียว) */
-.card[data-interactive="true"]{
-  transition:transform .35s cubic-bezier(.2,.8,.2,1),
-             background .35s,
-             box-shadow .35s;
-}
-
-.card[data-interactive="true"]:hover{
-  background:#0909FF;
-  transform:translateY(-6px) scale(1.02);
-  box-shadow:0 20px 40px rgba(0,0,0,.35),
-             0 0 0 1px rgba(255,255,255,.08);
-}
-
-.card[data-interactive="true"]:hover h2,
-.card[data-interactive="true"]:hover p{
-  color:#fff;
-}
-    
   </style>
 </head>
 
@@ -297,20 +267,7 @@ function renderItems(items){
     const container = document.getElementById(`${page}-page`);
     if (!container) return;
 
-    const hasLink = !!i.linkUrl;
-    let el = document.createElement(hasLink ? 'a' : 'div');
-
-    if (hasLink) {
-      el.href = i.linkUrl;
-
-      if (
-        !i.linkUrl.startsWith('mailto:') &&
-        !i.linkUrl.startsWith('tel:')
-      ) {
-        el.target = '_blank';
-        el.rel = 'noopener';
-      }
-    }
+    let el = document.createElement('div');
 
     const icon = i.iconUrl || i.iconURL || i.IconURL || '';
     const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
