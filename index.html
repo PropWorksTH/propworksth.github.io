@@ -57,7 +57,7 @@
       display:none;
       grid-template-columns:repeat(4,1fr);
       grid-auto-rows:minmax(160px, auto);
-      gap:16px;
+      gap:32px;
     }
     main.page-section.active{display:grid}
 
@@ -161,8 +161,11 @@
 <div id="loader">Loading…</div>
 
 <nav>
-  <div class="nav">
-    <div>PropWorks</div>
+  <div class="nav"> 
+  <div class="logo" onclick="switchPage('home')">
+    <img id="site-logo" src="" alt="Logo">
+    <span>PropWorks</span>
+  </div>
 
     <div class="menu">
       <div onclick="switchPage('home')">Home</div>
@@ -203,6 +206,18 @@ const API =
 fetch(API)
   .then(r => r.json())
   .then(data => {
+
+    // === STEP 2: SET LOGO FROM GOOGLE SHEET ===
+    const logoItem = (data.items || []).find(i =>
+      String(i.type || '').toLowerCase().trim() === 'logo'
+    );
+    const logoEl = document.getElementById('site-logo');
+    if (logoEl && logoItem) {
+      const logoUrl = logoItem.iconUrl || logoItem.iconURL || logoItem.IconURL || '';
+      if (logoUrl) logoEl.src = logoUrl;
+    }
+    // === END STEP 2 ===
+
     renderItems(data.items || []);
     switchPage('home');
   })
