@@ -284,7 +284,14 @@ function renderItems(items){
     const container = document.getElementById(`${page}-page`);
     if (!container) return;
 
-    let el = document.createElement('div');
+    const hasLink = !!i.linkUrl;
+    let el = document.createElement(hasLink ? 'a' : 'div');
+
+    if (hasLink) {
+      el.href = i.linkUrl;
+      el.style.textDecoration = 'none';
+      el.style.color = 'inherit';
+    }
 
     const icon = i.iconUrl || i.iconURL || i.IconURL || '';
     const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
@@ -299,6 +306,7 @@ function renderItems(items){
     }
     else {
       el.className = `card ${sizeToClass(i.size)}`;
+      if (hasLink) el.dataset.interactive = 'true';
       el.dataset.type = type;
       el.innerHTML = `
         ${iconHTML}
