@@ -184,7 +184,65 @@
    transform:translateY(-2px);
    box-shadow:0 12px 28px rgba(0,0,0,.25);
   }
-  
+
+  /* ===== Step 3: Visual Match (Color + Hover) ===== */
+
+/* สีการ์ดปกติให้เนียนแบบ Demo */
+.card {
+  background: linear-gradient(
+    180deg,
+    rgba(3,69,157,0.95),
+    rgba(3,69,157,0.85)
+  );
+}
+
+/* Hover เฉพาะการ์ดที่คลิกได้ */
+.card[data-interactive="true"]:hover {
+  transform: translateY(-6px) scale(1.03);
+  background: linear-gradient(
+    180deg,
+    #0A5BFF,
+    #003C9D
+  );
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+/* ข้อความในการ์ด hover สว่างขึ้น */
+.card[data-interactive="true"]:hover h2,
+.card[data-interactive="true"]:hover p {
+  color: #FFFFFF;
+}
+
+/* ไอคอนในการ์ด hover ให้เด่นขึ้น */
+.card[data-interactive="true"] .icon {
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.card[data-interactive="true"]:hover .icon {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Nav item hover ให้ตรง mood Demo */
+.nav-item {
+  position: relative;
+}
+.nav-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+.nav-item:hover::after,
+.nav-item.active::after {
+  width: 100%;
+}
+    
   </style>
 </head>
 
