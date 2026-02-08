@@ -255,7 +255,6 @@ function renderItems(items){
     const container = document.getElementById(`${page}-page`);
     if (!container) return;
 
-    const type = String(i.type || 'card').toLowerCase().trim();
     let el = document.createElement('div');
 
     const icon = i.iconUrl || i.iconURL || i.IconURL || '';
