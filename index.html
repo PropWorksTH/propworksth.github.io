@@ -376,9 +376,7 @@ function renderItems(items){
  if (type === 'hero') {
   el.className = 'card span-full';
 
-  const finalImgUrl =
-    i.iconUrl || i.iconURL || i.IconURL || '';
-
+  const finalImgUrl = i.iconUrl || i.iconURL || i.IconURL || '';
   if (finalImgUrl) {
     el.style.backgroundImage = `url('${finalImgUrl}')`;
     el.style.backgroundSize = 'cover';
@@ -402,14 +400,11 @@ function renderItems(items){
       <span class="cta-btn">Connect</span>
     </div>
   `;
-}
 
-if (type === 'hero-banner') {
+} else if (type === 'hero-banner') {
   el.className = 'card span-full';
 
-  const finalImgUrl =
-    i.iconUrl || i.iconURL || i.IconURL || '';
-
+  const finalImgUrl = i.iconUrl || i.iconURL || i.IconURL || '';
   if (finalImgUrl) {
     el.style.backgroundImage = `url('${finalImgUrl}')`;
     el.style.backgroundSize = 'cover';
@@ -422,26 +417,25 @@ if (type === 'hero-banner') {
       <p>${i.subtitle || ''}</p>
     </div>
   `;
-}
-    
-    else if (type === 'section-title') {
-      el.className = 'span-full section-title';
-      el.innerHTML = `
-        <h2>${i.title}</h2>
-        <p class="subtitle">${i.subtitle || ''}</p>
-      `;
-    }
 
-    else {
-      el.className = `card ${sizeToClass(i.size)}`;
-      if (hasLink) el.dataset.interactive = 'true';
-      el.dataset.type = type;
-      el.innerHTML = `
-        ${iconHTML}
-        <h3>${i.title}</h3>
-        <p>${i.subtitle || ''}</p>
-      `;
-    }
+} else if (type === 'section-title') {
+  el.className = 'span-full section-title';
+  el.innerHTML = `
+    <h2>${i.title}</h2>
+    <p class="subtitle">${i.subtitle || ''}</p>
+  `;
+
+} else {
+  el.className = `card ${sizeToClass(i.size)}`;
+  if (hasLink) el.dataset.interactive = 'true';
+  el.dataset.type = type;
+  el.innerHTML = `
+    ${iconHTML}
+    <h3>${i.title}</h3>
+    <p>${i.subtitle || ''}</p>
+  `;
+}
+
     container.appendChild(el);
   });
 }
