@@ -367,9 +367,14 @@ function renderItems(items){
       el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
     }
     else if (type === 'section-title') {
-      el.className = 'span-full section-title';
-      el.innerHTML = `<h2>${i.title}</h2>`;
+      el.className = 'card span-full';
+      el.dataset.type = 'section-title';
+      el.innerHTML = `
+        <h2>${i.title}</h2>
+        <p>${i.subtitle || ''}</p>
+      `;
     }
+
     else {
       el.className = `card ${sizeToClass(i.size)}`;
       if (hasLink) el.dataset.interactive = 'true';
