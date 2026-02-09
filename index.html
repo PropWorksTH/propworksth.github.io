@@ -364,6 +364,12 @@ function renderItems(items){
 
     if (type === 'hero' || type === 'hero-banner') {
       el.className = 'card span-full';
+      const bg = i.iconUrl || i.iconURL || i.IconURL || '';
+      if (bg) {
+        el.style.backgroundImage = `url('${bg}')`;
+        el.style.backgroundSize = 'cover';
+        el.style.backgroundPosition = 'center';
+      }
       el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
     }
     
