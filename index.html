@@ -373,7 +373,7 @@ function renderItems(items){
     const icon = i.iconUrl || i.iconURL || i.IconURL || '';
     const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
 
-  if (type === 'hero' || type === 'hero-banner') {
+ if (type === 'hero') {
   el.className = 'card span-full';
 
   const finalImgUrl =
@@ -400,6 +400,26 @@ function renderItems(items){
       <h2>${i.title}</h2>
       <p>${i.subtitle || ''}</p>
       <span class="cta-btn">Connect</span>
+    </div>
+  `;
+}
+
+if (type === 'hero-banner') {
+  el.className = 'card span-full';
+
+  const finalImgUrl =
+    i.iconUrl || i.iconURL || i.IconURL || '';
+
+  if (finalImgUrl) {
+    el.style.backgroundImage = `url('${finalImgUrl}')`;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  }
+
+  el.innerHTML = `
+    <div>
+      <h2>${i.title}</h2>
+      <p>${i.subtitle || ''}</p>
     </div>
   `;
 }
