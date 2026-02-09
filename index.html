@@ -106,6 +106,33 @@
       margin-bottom:20px;
     }
 
+    /* ===== BADGE : DEMO PARITY ===== */
+    .card[data-type="for-sale"]::after{
+      content:"For Sale";
+      position:absolute;
+      top:16px;
+      right:16px;
+      background:red;
+      color:#fff;
+      padding:6px 14px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:12px;
+    }
+
+    .card[data-type="for-rent"]::after{
+      content:"For Rent";
+      position:absolute;
+      top:16px;
+      right:16px;
+      background:#00FF00;
+      color:#008000;
+      padding:6px 14px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:12px;
+    }
+    
     .section-title h2{
       font-size:28px;
       font-weight:500;
