@@ -362,16 +362,35 @@ function renderItems(items){
     const icon = i.iconUrl || i.iconURL || i.IconURL || '';
     const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
 
-    if (type === 'hero' || type === 'hero-banner') {
-      el.className = 'card span-full';
-      const bg = i.iconUrl || i.iconURL || i.IconURL || '';
-      if (bg) {
-        el.style.backgroundImage = `url('${bg}')`;
-        el.style.backgroundSize = 'cover';
-        el.style.backgroundPosition = 'center';
-      }
-      el.innerHTML = `<h1>${i.title}</h1><p>${i.subtitle || ''}</p>`;
-    }
+  if (type === 'hero' || type === 'hero-banner') {
+  el.className = 'card span-full';
+
+  const finalImgUrl =
+    i.iconUrl || i.iconURL || i.IconURL || '';
+
+  if (finalImgUrl) {
+    el.style.backgroundImage = `url('${finalImgUrl}')`;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  }
+
+  el.style.justifyContent = 'flex-end';
+
+  const overlay = document.createElement('div');
+  overlay.style.position = 'absolute';
+  overlay.style.inset = '0';
+  overlay.style.background =
+    'linear-gradient(to top, rgba(0,0,0,0.8), transparent)';
+  overlay.style.zIndex = '1';
+  el.appendChild(overlay);
+
+  el.innerHTML = `
+    <div style="position:relative; z-index:2;">
+      <h2>${i.title}</h2>
+      <p>${i.subtitle || ''}</p>
+    </div>
+  `;
+}
     
     else if (type === 'section-title') {
       el.className = 'span-full section-title';
