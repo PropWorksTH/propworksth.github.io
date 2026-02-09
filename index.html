@@ -63,7 +63,18 @@
 
     /* ===== MENU ===== */
     .menu{display:flex;gap:20px}
-    .menu div{cursor:pointer}
+    .menu div{
+      cursor:pointer;
+      font-size:18px;
+      font-weight:400;
+      color:rgba(255,255,255,.85);
+      transition:color .2s ease;
+   }
+
+   .menu div:hover{
+     color:#fff;
+     font-weight:500;
+     }
 
     .hamburger{
       font-size:28px;
