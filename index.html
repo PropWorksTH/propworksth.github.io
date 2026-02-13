@@ -380,6 +380,11 @@ function renderItems(items){
       el.href = i.linkUrl;
       el.style.textDecoration = 'none';
       el.style.color = 'inherit';
+      
+      // === DEMO PARITY ===
+      if (!i.linkUrl.startsWith('mailto:') && !i.linkUrl.startsWith('tel:')) {
+        el.target = '_blank';
+      }    
     }
 
     const icon = i.iconUrl || i.iconURL || i.IconURL || '';
