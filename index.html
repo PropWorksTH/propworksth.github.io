@@ -99,8 +99,16 @@
       background:var(--card);
       border:var(--border);
       border-radius:var(--r);
-      padding:24px;
-      position:relative; /* ← FIX หลัก */
+      padding:30px;
+
+      display:flex;                 /* ✅ เพิ่ม */
+      flex-direction:column;        /* ✅ เพิ่ม */
+      justify-content:space-between;/* ✅ เพิ่ม */
+
+      min-height:280px;             /* ✅ เท่า Demo */
+      overflow:hidden;              /* ✅ กันล้น */
+      text-decoration:none;         /* ✅ parity anchor */
+      position:relative;
     }
 
     .icon{
