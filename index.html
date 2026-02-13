@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 
   <style>
     :root{
@@ -388,7 +389,9 @@ function renderItems(items){
     }
 
     const icon = i.iconUrl || i.iconURL || i.IconURL || '';
-    const iconHTML = icon ? `<img class="icon" src="${icon}" alt="">` : '';
+    const iconHTML = icon 
+      ? `<img class="icon" src="${icon}" alt="" onerror="this.style.display='none'">`
+      : `<span class="material-symbols-rounded" style="font-size:48px;margin-bottom:16px;">grid_view</span>`;
 
  if (type === 'hero') {
   el.className = 'card span-full';
